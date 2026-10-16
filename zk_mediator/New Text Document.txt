@@ -1,0 +1,4 @@
+@echo off
+cd /d C:\xampp\htdocs\world\zk_mediator
+start /B php zk_mediator.php
+exit

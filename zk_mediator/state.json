@@ -1,0 +1,10 @@
+{
+    "192.168.1.201": {
+        "device_name": "جهاز الفرع الرئيسي",
+        "ip": "192.168.1.201",
+        "last_synced_time": "2026-10-16 19:15:05",
+        "last_sync_attempt": "2026-10-16 22:25:38",
+        "status": "online_no_new_data",
+        "synced_count": 6
+    }
+}

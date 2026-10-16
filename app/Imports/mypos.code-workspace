@@ -1,0 +1,13 @@
+{
+	"folders": [
+		{
+			"name": "mypos",
+			"path": "../../../mypos"
+		},
+		{
+			"name": "hr-pixel",
+			"path": "../.."
+		}
+	],
+	"settings": {}
+}

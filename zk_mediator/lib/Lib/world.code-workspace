@@ -1,0 +1,43 @@
+{
+  "folders": [
+	{
+		"name": "world",
+		"path": "../../.."
+	},
+	{
+		"name": "shasha_view",
+		"path": "../../../../shasha_view"
+	},
+	{
+		"name": "saasvps",
+		"path": "../../../../saasvps"
+	},
+	{
+		"name": "anaya",
+		"path": "../../../../anaya"
+	},
+	{
+		"name": "pixelco",
+		"path": "../../../../pixelco"
+	},
+	{
+		"name": "chif",
+		"path": "../../../../chif"
+	},
+	{
+		"name": "chif_full",
+		"path": "../../../../chif_full"
+	},
+	{
+		"name": "roof",
+		"path": "../../../../roof"
+	},
+	{
+		"name": "shasha",
+		"path": "../../../../shasha"
+	}
+],
+  "settings": {
+    "git.ignoreLimitWarning": true
+  }
+}

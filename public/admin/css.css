@@ -1,0 +1,450 @@
+ 
+        @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;800&display=swap');
+
+        body {
+            font-family: 'Cairo', sans-serif;
+            margin: 0;
+            overflow-x: hidden;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        .glass-sidebar {
+            background: rgba(255, 255, 255, 0.98);
+            backdrop-filter: blur(15px);
+            border-left: 3px solid #38bdf8;
+        }
+
+        .dark .glass-sidebar {
+            background: #0d0d0d;
+            border-left: 3px solid #38bdf8;
+            box-shadow: -15px 0 40px -20px rgba(56, 189, 248, 0.18);
+        }
+
+        .stat-card {
+            background: #ffffff;
+            border: 1px solid rgba(0, 0, 0, 0.05);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+        }
+
+        .dark .stat-card {
+            background: rgba(20, 20, 20, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            box-shadow: none;
+        }
+
+        .stat-card:hover {
+            border-color: rgba(56, 189, 248, 0.5);
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.1);
+        }
+
+        .dark .stat-card:hover {
+            border-color: rgba(56, 189, 248, 0.3);
+            box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5);
+        }
+
+        .active-link {
+            background: linear-gradient(90deg, rgba(56, 189, 248, 0.15) 0%, transparent 100%);
+            border-right: 4px solid #38bdf8;
+            color: #0284c7;
+        }
+
+        .dark .active-link {
+            color: #38bdf8;
+        }
+
+        /* سكرول بار عام */
+        ::-webkit-scrollbar {
+            width: 10px;
+            height: 6px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #f1f5f9;
+        }
+
+        .dark ::-webkit-scrollbar-track {
+            background: #050505;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 10px;
+        }
+
+        .dark ::-webkit-scrollbar-thumb {
+            background: #1f2937;
+        }
+
+        /* سكرول بار مخصص للإشعارات */
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: rgba(156, 163, 175, 0.2);
+            border-radius: 10px;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+            background: rgba(56, 189, 248, 0.5);
+        }
+
+        #sidebar {
+            transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        #main-content {
+            transition: margin-right 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .sidebar-hidden {
+            transform: translateX(100%) !important;
+        }
+
+        .content-full {
+            margin-right: 0 !important;
+        }
+
+        @media (max-width: 1023px) {
+            #sidebar {
+                transform: translateX(100%);
+            }
+
+            #main-content {
+                margin-right: 0 !important;
+            }
+
+            #sidebar.mobile-show {
+                transform: translateX(0) !important;
+            }
+        }
+
+        .status-active {
+            color: #22c55e;
+            font-weight: bold;
+        }
+
+        .status-inactive {
+            color: #ef4444;
+            font-weight: bold;
+        }
+
+        .status-warning {
+            color: #0284c7;
+            font-weight: bold;
+        }
+
+        .dark .status-warning {
+            color: #38bdf8;
+            font-weight: bold;
+        }
+
+        .btn {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.625rem 1.25rem;
+            border-radius: 999px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            border: none;
+        }
+
+        .btn-primary {
+            background-color: #3b82f6;
+            color: rgb(0, 0, 0);
+        }
+
+        .btn-primary:hover {
+            background-color: #69a2ff;
+        }
+
+        .btn-warinig,
+        .btn-warning,
+        .btn-yellow {
+            background-color: #38bdf8;
+            background-image: linear-gradient(135deg, #38bdf8 0%, #0ea5e9 100%);
+            color: #ffffff;
+            box-shadow: 0 4px 14px 0 rgba(14, 165, 233, 0.35);
+        }
+
+        .btn-warinig:hover,
+        .btn-warning:hover,
+        .btn-yellow:hover {
+            background-color: #0ea5e9;
+            background-image: linear-gradient(135deg, #0ea5e9 0%, #0284c7 100%);
+            color: #ffffff;
+            box-shadow: 0 6px 20px 0 rgba(14, 165, 233, 0.5);
+        }
+
+        .btn:active {
+            transform: scale(0.95);
+        }
+
+        /* Danger */
+        .btn-danger {
+            background-color: #ef4444;
+            color: rgb(0, 0, 0);
+        }
+
+        .btn-danger:hover {
+            background-color: rgb(255, 82, 82);
+        }
+
+        /* Success */
+        .btn-success {
+            background-color: #22c55e;
+            color: rgb(0, 0, 0);
+        }
+
+        .btn-success:hover {
+            background-color: #5df896;
+        }
+
+        /* Light */
+        .btn-light {
+            background-color: #f3f4f6;
+            color: #111;
+        }
+
+        .btn-light:hover {
+            background-color: #e5e7eb;
+        }
+
+        /* لدمج اللوجو مع الخلفية */
+        .dark img[src="unnamed.jpg"] {
+            mix-blend-mode: screen;
+            filter: contrast(1.1) brightness(1.1);
+        }
+
+        .light img[src="unnamed.jpg"] {
+            mix-blend-mode: multiply;
+        }
+
+        /* تنسيق صفوف ورؤوس الجداول باللون الأزرق لجميع الجداول في النظام */
+        table thead tr,
+        table thead {
+            background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%) !important;
+            color: #ffffff !important;
+        }
+
+        table thead tr th,
+        table thead th,
+        table thead th span,
+        table thead th div {
+            color: #ffffff !important;
+        }
+
+        table thead th svg,
+        table thead th i {
+            color: #ffffff !important;
+            stroke: #ffffff !important;
+        }
+
+        table tbody tr:hover {
+            background-color: rgba(56, 189, 248, 0.08) !important;
+        }
+
+        /* ========================================================
+           تحويل أي زرار أصفر إلى أزرق فاتح (Sky / Light Blue)
+           ======================================================== */
+
+        /* 1. الأزرار الأساسية (Solid Buttons) */
+        button[class*="bg-yellow-500"]:not([class*="bg-yellow-500/"]),
+        button[class*="bg-yellow-400"],
+        button[class*="bg-yellow-600"],
+        a[class*="bg-yellow-500"]:not([class*="bg-yellow-500/"]),
+        a[class*="bg-yellow-400"],
+        a[class*="bg-yellow-600"],
+        input[type="submit"][class*="bg-yellow"],
+        input[type="button"][class*="bg-yellow"],
+        #add-btn,
+        label[class*="has-[:checked]:bg-yellow"]:has(:checked) {
+            background-color: #38bdf8 !important;
+            background-image: linear-gradient(135deg, #38bdf8 0%, #0ea5e9 100%) !important;
+            color: #ffffff !important;
+            border-color: transparent !important;
+            box-shadow: 0 4px 14px 0 rgba(14, 165, 233, 0.35) !important;
+        }
+
+        /* Hover & Active للأزرار الأساسية */
+        button[class*="bg-yellow-500"]:not([class*="bg-yellow-500/"]):hover,
+        button[class*="bg-yellow-400"]:hover,
+        button[class*="bg-yellow-600"]:hover,
+        a[class*="bg-yellow-500"]:not([class*="bg-yellow-500/"]):hover,
+        a[class*="bg-yellow-400"]:hover,
+        a[class*="bg-yellow-600"]:hover,
+        input[type="submit"][class*="bg-yellow"]:hover,
+        input[type="button"][class*="bg-yellow"]:hover,
+        #add-btn:hover {
+            background-color: #0ea5e9 !important;
+            background-image: linear-gradient(135deg, #0ea5e9 0%, #0284c7 100%) !important;
+            color: #ffffff !important;
+            box-shadow: 0 6px 20px 0 rgba(14, 165, 233, 0.5) !important;
+        }
+
+        button[class*="bg-yellow-500"]:not([class*="bg-yellow-500/"]):active,
+        button[class*="bg-yellow-400"]:active,
+        button[class*="bg-yellow-600"]:active,
+        a[class*="bg-yellow-500"]:not([class*="bg-yellow-500/"]):active,
+        a[class*="bg-yellow-400"]:active,
+        a[class*="bg-yellow-600"]:active,
+        #add-btn:active {
+            transform: scale(0.96) !important;
+        }
+
+        /* نصوص وأيقونات داخل الأزرار الأساسية */
+        button[class*="bg-yellow-500"]:not([class*="bg-yellow-500/"]) *,
+        button[class*="bg-yellow-400"] *,
+        button[class*="bg-yellow-600"] *,
+        button[class*="bg-sky-500"]:not([class*="bg-sky-500/"]) *,
+        button[class*="bg-sky-400"] *,
+        a[class*="bg-yellow-500"]:not([class*="bg-yellow-500/"]) *,
+        a[class*="bg-yellow-400"] *,
+        a[class*="bg-yellow-600"] *,
+        a[class*="bg-sky-500"]:not([class*="bg-sky-500/"]) *,
+        a[class*="bg-sky-400"] *,
+        #add-btn *,
+        label[class*="has-[:checked]:bg-yellow"]:has(:checked) *,
+        label[class*="has-[:checked]:bg-sky"]:has(:checked) * {
+            color: #ffffff !important;
+            stroke: #ffffff !important;
+        }
+
+        /* 2. الأزرار الخفيفة وأزرار التعديل في الجداول (Soft Buttons) */
+        button[class*="bg-yellow-500/"],
+        button[class*="bg-yellow-50"],
+        button[class*="bg-yellow-100"],
+        button[class*="bg-yellow-200"],
+        a[class*="bg-yellow-500/"],
+        a[class*="bg-yellow-50"],
+        a[class*="bg-yellow-100"],
+        a[class*="bg-yellow-200"] {
+            background-color: rgba(56, 189, 248, 0.12) !important;
+            background-image: none !important;
+            color: #0284c7 !important;
+            border-color: rgba(56, 189, 248, 0.2) !important;
+            box-shadow: none !important;
+        }
+
+        button[class*="bg-yellow-500/"]:hover,
+        button[class*="bg-yellow-50"]:hover,
+        button[class*="bg-yellow-100"]:hover,
+        button[class*="bg-yellow-200"]:hover,
+        a[class*="bg-yellow-500/"]:hover,
+        a[class*="bg-yellow-50"]:hover,
+        a[class*="bg-yellow-100"]:hover,
+        a[class*="bg-yellow-200"]:hover {
+            background-color: rgba(56, 189, 248, 0.22) !important;
+            color: #0369a1 !important;
+        }
+
+        .dark button[class*="bg-yellow-500/"],
+        .dark button[class*="bg-yellow-50"],
+        .dark button[class*="bg-yellow-100"],
+        .dark button[class*="bg-yellow-200"],
+        .dark a[class*="bg-yellow-500/"],
+        .dark a[class*="bg-yellow-50"],
+        .dark a[class*="bg-yellow-100"],
+        .dark a[class*="bg-yellow-200"] {
+            background-color: rgba(56, 189, 248, 0.15) !important;
+            color: #38bdf8 !important;
+        }
+
+        .dark button[class*="bg-yellow-500/"]:hover,
+        .dark button[class*="bg-yellow-50"]:hover,
+        .dark button[class*="bg-yellow-100"]:hover,
+        .dark button[class*="bg-yellow-200"]:hover,
+        .dark a[class*="bg-yellow-500/"]:hover,
+        .dark a[class*="bg-yellow-50"]:hover,
+        .dark a[class*="bg-yellow-100"]:hover,
+        .dark a[class*="bg-yellow-200"]:hover {
+            background-color: rgba(56, 189, 248, 0.28) !important;
+            color: #7dd3fc !important;
+        }
+
+        button[class*="bg-yellow-500/"] *,
+        button[class*="bg-yellow-50"] *,
+        button[class*="bg-yellow-100"] *,
+        button[class*="bg-yellow-200"] *,
+        a[class*="bg-yellow-500/"] *,
+        a[class*="bg-yellow-50"] *,
+        a[class*="bg-yellow-100"] *,
+        a[class*="bg-yellow-200"] * {
+            color: inherit !important;
+            stroke: currentColor !important;
+        }
+
+        /* 3. زر القائمة الجانبية (Toggle Sidebar Button) */
+        #toggle-sidebar {
+            color: #0284c7 !important;
+        }
+
+        .dark #toggle-sidebar {
+            color: #38bdf8 !important;
+        }
+
+        #toggle-sidebar:hover {
+            background-color: rgba(56, 189, 248, 0.15) !important;
+        }
+
+        #toggle-sidebar i,
+        #toggle-sidebar svg {
+            stroke: currentColor !important;
+        }
+
+        /* 4. عناصر القائمة الجانبية عند التمرير (Sidebar Hover Links) */
+        #sidebar nav a:hover,
+        #sidebar nav summary:hover {
+            color: #0284c7 !important;
+        }
+
+        .dark #sidebar nav a:hover,
+        .dark #sidebar nav summary:hover {
+            color: #38bdf8 !important;
+        }
+
+        #sidebar nav a:hover i,
+        #sidebar nav a:hover svg,
+        #sidebar nav summary:hover i,
+        #sidebar nav summary:hover svg {
+            color: #0284c7 !important;
+            stroke: #0284c7 !important;
+        }
+
+        .dark #sidebar nav a:hover i,
+        .dark #sidebar nav a:hover svg,
+        .dark #sidebar nav summary:hover i,
+        .dark #sidebar nav summary:hover svg {
+            color: #38bdf8 !important;
+            stroke: #38bdf8 !important;
+        }
+
+        /* 5. تحويل الظلال والمؤشرات الصفراء إلى أزرق */
+        [class*="250,204,21"],
+        [class*="234,179,8"] {
+            box-shadow: 0 0 15px rgba(56, 189, 248, 0.45) !important;
+        }
+
+        /* 6. تحويل صناديق الاختيار (Checkboxes) إلى الأزرق */
+        input[type="checkbox"][class*="yellow"],
+        input[type="radio"][class*="yellow"] {
+            color: #0ea5e9 !important;
+            accent-color: #0ea5e9 !important;
+        }
+
+        /* 7. تركيز الحقول (Focus Borders & Rings) */
+        input[class*="focus:border-yellow"]:focus,
+        select[class*="focus:border-yellow"]:focus,
+        textarea[class*="focus:border-yellow"]:focus {
+            border-color: rgba(14, 165, 233, 0.6) !important;
+            --tw-ring-color: rgba(14, 165, 233, 0.25) !important;
+        }

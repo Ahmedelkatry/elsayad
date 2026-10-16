@@ -1,0 +1,13 @@
+{
+  "server_url": "http://localhost:73",
+  "sync_interval_seconds": 60,
+  "verify_ssl": false,
+  "timezone": "Africa/Cairo",
+  "devices": [
+    {
+      "name": "جهاز الفرع الرئيسي",
+      "ip": "192.168.1.201",
+      "port": 4370
+    }
+  ]
+}
