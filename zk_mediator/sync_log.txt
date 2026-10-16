@@ -3890,3 +3890,25 @@
 [2026-10-16 22:24:37] [INFO] [USER-SYNC] Fetching employees from server for: جهاز الفرع الرئيسي
 [2026-10-16 22:24:37] [INFO] [USER-SYNC] No new employees to sync for جهاز الفرع الرئيسي.
 [2026-10-16 22:24:37] [INFO] Cycle finished. Sleeping for 60 seconds before next check...
+[2026-10-16 22:25:37] [INFO] Processing device: جهاز الفرع الرئيسي (IP: 192.168.1.201:4370)
+[2026-10-16 22:25:37] [DEBUG] Connecting via IP socket to 192.168.1.201:4370...
+[2026-10-16 22:25:37] [INFO] Connected successfully to device: جهاز الفرع الرئيسي
+[2026-10-16 22:25:37] [INFO] Device has 6 total records stored in memory.
+[2026-10-16 22:25:37] [DEBUG] Disconnected from device socket: جهاز الفرع الرئيسي
+[2026-10-16 22:25:37] [DEBUG] Last synced timestamp: 2026-10-16 19:15:05
+[2026-10-16 22:25:37] [INFO] No new logs to upload for جهاز الفرع الرئيسي. Sending heartbeat ping to keep device Online.
+[2026-10-16 22:25:38] [DEBUG] Heartbeat received by server successfully.
+[2026-10-16 22:25:38] [INFO] [USER-SYNC] Fetching employees from server for: جهاز الفرع الرئيسي
+[2026-10-16 22:25:39] [INFO] [USER-SYNC] No new employees to sync for جهاز الفرع الرئيسي.
+[2026-10-16 22:25:39] [INFO] Cycle finished. Sleeping for 60 seconds before next check...
+[2026-10-16 22:26:39] [INFO] Processing device: جهاز الفرع الرئيسي (IP: 192.168.1.201:4370)
+[2026-10-16 22:26:39] [DEBUG] Connecting via IP socket to 192.168.1.201:4370...
+[2026-10-16 22:26:39] [INFO] Connected successfully to device: جهاز الفرع الرئيسي
+[2026-10-16 22:26:39] [INFO] Device has 6 total records stored in memory.
+[2026-10-16 22:26:39] [DEBUG] Disconnected from device socket: جهاز الفرع الرئيسي
+[2026-10-16 22:26:39] [DEBUG] Last synced timestamp: 2026-10-16 19:15:05
+[2026-10-16 22:26:39] [INFO] No new logs to upload for جهاز الفرع الرئيسي. Sending heartbeat ping to keep device Online.
+[2026-10-16 22:26:39] [DEBUG] Heartbeat received by server successfully.
+[2026-10-16 22:26:40] [INFO] [USER-SYNC] Fetching employees from server for: جهاز الفرع الرئيسي
+[2026-10-16 22:26:40] [INFO] [USER-SYNC] No new employees to sync for جهاز الفرع الرئيسي.
+[2026-10-16 22:26:40] [INFO] Cycle finished. Sleeping for 60 seconds before next check...
