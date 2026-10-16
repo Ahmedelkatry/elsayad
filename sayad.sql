@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 5.2.2
+-- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
--- Host: 127.0.0.1:3306
--- Generation Time: Aug 10, 2026 at 09:08 PM
--- Server version: 11.8.8-MariaDB-log
--- PHP Version: 7.2.34
+-- Host: 127.0.0.1
+-- Generation Time: Oct 16, 2026 at 10:41 PM
+-- Server version: 10.4.32-MariaDB
+-- PHP Version: 8.2.12
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -18,7 +18,7 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Database: `u803161749_roof`
+-- Database: `sayad`
 --
 
 -- --------------------------------------------------------
@@ -52,7 +52,7 @@ CREATE TABLE `cache` (
 --
 
 INSERT INTO `cache` (`key`, `value`, `expiration`) VALUES
-('spatie.permission.cache', 'a:3:{s:5:\"alias\";a:4:{s:1:\"a\";s:2:\"id\";s:1:\"b\";s:4:\"name\";s:1:\"c\";s:10:\"guard_name\";s:1:\"r\";s:5:\"roles\";}s:11:\"permissions\";a:97:{i:0;a:4:{s:1:\"a\";i:1;s:1:\"b\";s:16:\"الموظفين\";s:1:\"c\";s:3:\"web\";s:1:\"r\";a:1:{i:0;i:1;}}i:1;a:4:{s:1:\"a\";i:2;s:1:\"b\";s:19:\"اضافه موظف\";s:1:\"c\";s:3:\"web\";s:1:\"r\";a:1:{i:0;i:1;}}i:2;a:4:{s:1:\"a\";i:3;s:1:\"b\";s:19:\"تعديل موظف\";s:1:\"c\";s:3:\"web\";s:1:\"r\";a:1:{i:0;i:1;}}i:3;a:4:{s:1:\"a\";i:4;s:1:\"b\";s:15:\"حذف موظف\";s:1:\"c\";s:3:\"web\";s:1:\"r\";a:1:{i:0;i:1;}}i:4;a:4:{s:1:\"a\";i:5;s:1:\"b\";s:8:\"شيفت\";s:1:\"c\";s:3:\"web\";s:1:\"r\";a:1:{i:0;i:1;}}i:5;a:4:{s:1:\"a\";i:6;s:1:\"b\";s:19:\"اضافه شيفت\";s:1:\"c\";s:3:\"web\";s:1:\"r\";a:1:{i:0;i:1;}}i:6;a:4:{s:1:\"a\";i:7;s:1:\"b\";s:19:\"تعديل شيفت\";s:1:\"c\";s:3:\"web\";s:1:\"r\";a:1:{i:0;i:1;}}i:7;a:4:{s:1:\"a\";i:8;s:1:\"b\";s:15:\"حذف شيفت\";s:1:\"c\";s:3:\"web\";s:1:\"r\";a:1:{i:0;i:1;}}i:8;a:4:{s:1:\"a\";i:9;s:1:\"b\";s:19:\"تبديل شيفت\";s:1:\"c\";s:3:\"web\";s:1:\"r\";a:1:{i:0;i:1;}}i:9;a:4:{s:1:\"a\";i:10;s:1:\"b\";s:28:\"تبديل شيفت موظف\";s:1:\"c\";s:3:\"web\";s:1:\"r\";a:1:{i:0;i:1;}}i:10;a:4:{s:1:\"a\";i:11;s:1:\"b\";s:28:\"اضافه شيفت موظف\";s:1:\"c\";s:3:\"web\";s:1:\"r\";a:1:{i:0;i:1;}}i:11;a:4:{s:1:\"a\";i:12;s:1:\"b\";s:28:\"تعديل شيفت موظف\";s:1:\"c\";s:3:\"web\";s:1:\"r\";a:1:{i:0;i:1;}}i:12;a:4:{s:1:\"a\";i:13;s:1:\"b\";s:25:\"حذف  شيفت موظف\";s:1:\"c\";s:3:\"web\";s:1:\"r\";a:1:{i:0;i:1;}}i:13;a:4:{s:1:\"a\";i:14;s:1:\"b\";s:26:\"تبديل شيفت قسم\";s:1:\"c\";s:3:\"web\";s:1:\"r\";a:1:{i:0;i:1;}}i:14;a:4:{s:1:\"a\";i:15;s:1:\"b\";s:26:\"اضافه شيفت قسم\";s:1:\"c\";s:3:\"web\";s:1:\"r\";a:1:{i:0;i:1;}}i:15;a:4:{s:1:\"a\";i:16;s:1:\"b\";s:26:\"تعديل شيفت قسم\";s:1:\"c\";s:3:\"web\";s:1:\"r\";a:1:{i:0;i:1;}}i:16;a:4:{s:1:\"a\";i:17;s:1:\"b\";s:23:\"حذف  شيفت قسم\";s:1:\"c\";s:3:\"web\";s:1:\"r\";a:1:{i:0;i:1;}}i:17;a:4:{s:1:\"a\";i:18;s:1:\"b\";s:6:\"اذن\";s:1:\"c\";s:3:\"web\";s:1:\"r\";a:1:{i:0;i:1;}}i:18;a:4:{s:1:\"a\";i:19;s:1:\"b\";s:17:\"اضافه اذن\";s:1:\"c\";s:3:\"web\";s:1:\"r\";a:1:{i:0;i:1;}}i:19;a:4:{s:1:\"a\";i:20;s:1:\"b\";s:17:\"تعديل اذن\";s:1:\"c\";s:3:\"web\";s:1:\"r\";a:1:{i:0;i:1;}}i:20;a:4:{s:1:\"a\";i:21;s:1:\"b\";s:13:\"حذف اذن\";s:1:\"c\";s:3:\"web\";s:1:\"r\";a:1:{i:0;i:1;}}i:21;a:4:{s:1:\"a\";i:22;s:1:\"b\";s:38:\"اداره بصمات الموظفين\";s:1:\"c\";s:3:\"web\";s:1:\"r\";a:1:{i:0;i:1;}}i:22;a:4:{s:1:\"a\";i:23;s:1:\"b\";s:28:\"اضافه بصمه موظف\";s:1:\"c\";s:3:\"web\";s:1:\"r\";a:1:{i:0;i:1;}}i:23;a:4:{s:1:\"a\";i:24;s:1:\"b\";s:28:\"تعديل بصمه موظف\";s:1:\"c\";s:3:\"web\";s:1:\"r\";a:1:{i:0;i:1;}}i:24;a:4:{s:1:\"a\";i:25;s:1:\"b\";s:24:\"حذف بصمه موظف\";s:1:\"c\";s:3:\"web\";s:1:\"r\";a:1:{i:0;i:1;}}i:25;a:4:{s:1:\"a\";i:26;s:1:\"b\";s:17:\"طلب اجازه\";s:1:\"c\";s:3:\"web\";s:1:\"r\";a:1:{i:0;i:1;}}i:26;a:4:{s:1:\"a\";i:27;s:1:\"b\";s:21:\"اضافه اجازه\";s:1:\"c\";s:3:\"web\";s:1:\"r\";a:1:{i:0;i:1;}}i:27;a:4:{s:1:\"a\";i:28;s:1:\"b\";s:21:\"تعديل اجازه\";s:1:\"c\";s:3:\"web\";s:1:\"r\";a:1:{i:0;i:1;}}i:28;a:4:{s:1:\"a\";i:29;s:1:\"b\";s:17:\"حذف اجازه\";s:1:\"c\";s:3:\"web\";s:1:\"r\";a:1:{i:0;i:1;}}i:29;a:4:{s:1:\"a\";i:30;s:1:\"b\";s:14:\"الاقسام\";s:1:\"c\";s:3:\"web\";s:1:\"r\";a:1:{i:0;i:1;}}i:30;a:4:{s:1:\"a\";i:31;s:1:\"b\";s:17:\"اضافه قسم\";s:1:\"c\";s:3:\"web\";s:1:\"r\";a:1:{i:0;i:1;}}i:31;a:4:{s:1:\"a\";i:32;s:1:\"b\";s:17:\"تعديل قسم\";s:1:\"c\";s:3:\"web\";s:1:\"r\";a:1:{i:0;i:1;}}i:32;a:4:{s:1:\"a\";i:33;s:1:\"b\";s:13:\"حذف قسم\";s:1:\"c\";s:3:\"web\";s:1:\"r\";a:1:{i:0;i:1;}}i:33;a:4:{s:1:\"a\";i:34;s:1:\"b\";s:10:\"الخصم\";s:1:\"c\";s:3:\"web\";s:1:\"r\";a:1:{i:0;i:1;}}i:34;a:4:{s:1:\"a\";i:35;s:1:\"b\";s:17:\"اضافه خصم\";s:1:\"c\";s:3:\"web\";s:1:\"r\";a:1:{i:0;i:1;}}i:35;a:4:{s:1:\"a\";i:36;s:1:\"b\";s:17:\"تعديل خصم\";s:1:\"c\";s:3:\"web\";s:1:\"r\";a:1:{i:0;i:1;}}i:36;a:4:{s:1:\"a\";i:37;s:1:\"b\";s:13:\"حذف خصم\";s:1:\"c\";s:3:\"web\";s:1:\"r\";a:1:{i:0;i:1;}}i:37;a:4:{s:1:\"a\";i:38;s:1:\"b\";s:6:\"سلف\";s:1:\"c\";s:3:\"web\";s:1:\"r\";a:1:{i:0;i:1;}}i:38;a:4:{s:1:\"a\";i:39;s:1:\"b\";s:17:\"اضافه سلف\";s:1:\"c\";s:3:\"web\";s:1:\"r\";a:1:{i:0;i:1;}}i:39;a:4:{s:1:\"a\";i:40;s:1:\"b\";s:17:\"تعديل سلف\";s:1:\"c\";s:3:\"web\";s:1:\"r\";a:1:{i:0;i:1;}}i:40;a:4:{s:1:\"a\";i:41;s:1:\"b\";s:13:\"حذف سلف\";s:1:\"c\";s:3:\"web\";s:1:\"r\";a:1:{i:0;i:1;}}i:41;a:4:{s:1:\"a\";i:42;s:1:\"b\";s:14:\"التقرير\";s:1:\"c\";s:3:\"web\";s:1:\"r\";a:1:{i:0;i:1;}}i:42;a:4:{s:1:\"a\";i:43;s:1:\"b\";s:19:\"تقرير موظف\";s:1:\"c\";s:3:\"web\";s:1:\"r\";a:1:{i:0;i:1;}}i:43;a:4:{s:1:\"a\";i:44;s:1:\"b\";s:30:\"استيراد ملف موظف\";s:1:\"c\";s:3:\"web\";s:1:\"r\";a:1:{i:0;i:1;}}i:44;a:4:{s:1:\"a\";i:45;s:1:\"b\";s:15:\"بحث موظف\";s:1:\"c\";s:3:\"web\";s:1:\"r\";a:1:{i:0;i:1;}}i:45;a:4:{s:1:\"a\";i:46;s:1:\"b\";s:23:\"تقرير اجمالي\";s:1:\"c\";s:3:\"web\";s:1:\"r\";a:1:{i:0;i:1;}}i:46;a:4:{s:1:\"a\";i:47;s:1:\"b\";s:23:\"تقرير بالقسم\";s:1:\"c\";s:3:\"web\";s:1:\"r\";a:1:{i:0;i:1;}}i:47;a:4:{s:1:\"a\";i:48;s:1:\"b\";s:28:\"استيراد ملف قسم\";s:1:\"c\";s:3:\"web\";s:1:\"r\";a:1:{i:0;i:1;}}i:48;a:4:{s:1:\"a\";i:49;s:1:\"b\";s:17:\"بحث القسم\";s:1:\"c\";s:3:\"web\";s:1:\"r\";a:1:{i:0;i:1;}}i:49;a:4:{s:1:\"a\";i:50;s:1:\"b\";s:33:\"اعدادات المستخدين\";s:1:\"c\";s:3:\"web\";s:1:\"r\";a:1:{i:0;i:1;}}i:50;a:4:{s:1:\"a\";i:51;s:1:\"b\";s:20:\"المستخدمين\";s:1:\"c\";s:3:\"web\";s:1:\"r\";a:1:{i:0;i:1;}}i:51;a:4:{s:1:\"a\";i:52;s:1:\"b\";s:23:\"اضافه مستخدم\";s:1:\"c\";s:3:\"web\";s:1:\"r\";a:1:{i:0;i:1;}}i:52;a:4:{s:1:\"a\";i:53;s:1:\"b\";s:23:\"تعديل مستخدم\";s:1:\"c\";s:3:\"web\";s:1:\"r\";a:1:{i:0;i:1;}}i:53;a:4:{s:1:\"a\";i:54;s:1:\"b\";s:19:\"حذف مستخدم\";s:1:\"c\";s:3:\"web\";s:1:\"r\";a:1:{i:0;i:1;}}i:54;a:4:{s:1:\"a\";i:55;s:1:\"b\";s:18:\"الصلاحيات\";s:1:\"c\";s:3:\"web\";s:1:\"r\";a:1:{i:0;i:1;}}i:55;a:4:{s:1:\"a\";i:56;s:1:\"b\";s:19:\"عرض صلاحية\";s:1:\"c\";s:3:\"web\";s:1:\"r\";a:1:{i:0;i:1;}}i:56;a:4:{s:1:\"a\";i:57;s:1:\"b\";s:23:\"اضافة صلاحية\";s:1:\"c\";s:3:\"web\";s:1:\"r\";a:1:{i:0;i:1;}}i:57;a:4:{s:1:\"a\";i:58;s:1:\"b\";s:23:\"تعديل صلاحية\";s:1:\"c\";s:3:\"web\";s:1:\"r\";a:1:{i:0;i:1;}}i:58;a:4:{s:1:\"a\";i:59;s:1:\"b\";s:19:\"حذف صلاحية\";s:1:\"c\";s:3:\"web\";s:1:\"r\";a:1:{i:0;i:1;}}i:59;a:4:{s:1:\"a\";i:60;s:1:\"b\";s:36:\"سحب السجلات الهواتف\";s:1:\"c\";s:3:\"web\";s:1:\"r\";a:1:{i:0;i:1;}}i:60;a:4:{s:1:\"a\";i:61;s:1:\"b\";s:17:\"IP-الاتصال\";s:1:\"c\";s:3:\"web\";s:1:\"r\";a:1:{i:0;i:1;}}i:61;a:4:{s:1:\"a\";i:62;s:1:\"b\";s:41:\"سحب الموظفين من البصمه\";s:1:\"c\";s:3:\"web\";s:1:\"r\";a:1:{i:0;i:1;}}i:62;a:4:{s:1:\"a\";i:63;s:1:\"b\";s:8:\"حافز\";s:1:\"c\";s:3:\"web\";s:1:\"r\";a:1:{i:0;i:1;}}i:63;a:4:{s:1:\"a\";i:64;s:1:\"b\";s:19:\"اضافه حافز\";s:1:\"c\";s:3:\"web\";s:1:\"r\";a:1:{i:0;i:1;}}i:64;a:4:{s:1:\"a\";i:65;s:1:\"b\";s:19:\"تعديل حافز\";s:1:\"c\";s:3:\"web\";s:1:\"r\";a:1:{i:0;i:1;}}i:65;a:4:{s:1:\"a\";i:66;s:1:\"b\";s:15:\"حذف حافز\";s:1:\"c\";s:3:\"web\";s:1:\"r\";a:1:{i:0;i:1;}}i:66;a:4:{s:1:\"a\";i:67;s:1:\"b\";s:23:\"شؤن الموظفين\";s:1:\"c\";s:3:\"web\";s:1:\"r\";a:1:{i:0;i:1;}}i:67;a:4:{s:1:\"a\";i:68;s:1:\"b\";s:6:\"قرض\";s:1:\"c\";s:3:\"web\";s:1:\"r\";a:1:{i:0;i:1;}}i:68;a:4:{s:1:\"a\";i:69;s:1:\"b\";s:17:\"اضافه قرض\";s:1:\"c\";s:3:\"web\";s:1:\"r\";a:1:{i:0;i:1;}}i:69;a:4:{s:1:\"a\";i:70;s:1:\"b\";s:17:\"تعديل قرض\";s:1:\"c\";s:3:\"web\";s:1:\"r\";a:1:{i:0;i:1;}}i:70;a:4:{s:1:\"a\";i:71;s:1:\"b\";s:13:\"حذف قرض\";s:1:\"c\";s:3:\"web\";s:1:\"r\";a:1:{i:0;i:1;}}i:71;a:4:{s:1:\"a\";i:72;s:1:\"b\";s:21:\"خصم مواصلات\";s:1:\"c\";s:3:\"web\";s:1:\"r\";a:1:{i:0;i:1;}}i:72;a:4:{s:1:\"a\";i:73;s:1:\"b\";s:28:\"حذف خصم مواصلات\";s:1:\"c\";s:3:\"web\";s:1:\"r\";a:1:{i:0;i:1;}}i:73;a:4:{s:1:\"a\";i:74;s:1:\"b\";s:32:\"تعديل خصم مواصلات\";s:1:\"c\";s:3:\"web\";s:1:\"r\";a:1:{i:0;i:1;}}i:74;a:4:{s:1:\"a\";i:75;s:1:\"b\";s:32:\"اضافه خصم مواصلات\";s:1:\"c\";s:3:\"web\";s:1:\"r\";a:1:{i:0;i:1;}}i:75;a:4:{s:1:\"a\";i:76;s:1:\"b\";s:21:\"بدل مواصلات\";s:1:\"c\";s:3:\"web\";s:1:\"r\";a:1:{i:0;i:1;}}i:76;a:4:{s:1:\"a\";i:77;s:1:\"b\";s:28:\"حذف بدل مواصلات\";s:1:\"c\";s:3:\"web\";s:1:\"r\";a:1:{i:0;i:1;}}i:77;a:4:{s:1:\"a\";i:78;s:1:\"b\";s:32:\"تعديل بدل مواصلات\";s:1:\"c\";s:3:\"web\";s:1:\"r\";a:1:{i:0;i:1;}}i:78;a:4:{s:1:\"a\";i:79;s:1:\"b\";s:32:\"اضافه بدل مواصلات\";s:1:\"c\";s:3:\"web\";s:1:\"r\";a:1:{i:0;i:1;}}i:79;a:4:{s:1:\"a\";i:80;s:1:\"b\";s:18:\"التامينات\";s:1:\"c\";s:3:\"web\";s:1:\"r\";a:1:{i:0;i:1;}}i:80;a:4:{s:1:\"a\";i:81;s:1:\"b\";s:25:\"اضافه تامينات\";s:1:\"c\";s:3:\"web\";s:1:\"r\";a:1:{i:0;i:1;}}i:81;a:4:{s:1:\"a\";i:82;s:1:\"b\";s:21:\"حذف تامينات\";s:1:\"c\";s:3:\"web\";s:1:\"r\";a:1:{i:0;i:1;}}i:82;a:4:{s:1:\"a\";i:83;s:1:\"b\";s:25:\"تعديل تامينات\";s:1:\"c\";s:3:\"web\";s:1:\"r\";a:1:{i:0;i:1;}}i:83;a:4:{s:1:\"a\";i:84;s:1:\"b\";s:18:\"المشتريات\";s:1:\"c\";s:3:\"web\";s:1:\"r\";a:1:{i:0;i:1;}}i:84;a:4:{s:1:\"a\";i:85;s:1:\"b\";s:25:\"اضافه مشتريات\";s:1:\"c\";s:3:\"web\";s:1:\"r\";a:1:{i:0;i:1;}}i:85;a:4:{s:1:\"a\";i:86;s:1:\"b\";s:21:\"حذف مشتريات\";s:1:\"c\";s:3:\"web\";s:1:\"r\";a:1:{i:0;i:1;}}i:86;a:4:{s:1:\"a\";i:87;s:1:\"b\";s:25:\"تعديل مشتريات\";s:1:\"c\";s:3:\"web\";s:1:\"r\";a:1:{i:0;i:1;}}i:87;a:4:{s:1:\"a\";i:88;s:1:\"b\";s:19:\"ايام العيد\";s:1:\"c\";s:3:\"web\";s:1:\"r\";a:1:{i:0;i:1;}}i:88;a:4:{s:1:\"a\";i:89;s:1:\"b\";s:17:\"اضافه عيد\";s:1:\"c\";s:3:\"web\";s:1:\"r\";a:1:{i:0;i:1;}}i:89;a:4:{s:1:\"a\";i:90;s:1:\"b\";s:17:\"تعديل عيد\";s:1:\"c\";s:3:\"web\";s:1:\"r\";a:1:{i:0;i:1;}}i:90;a:4:{s:1:\"a\";i:91;s:1:\"b\";s:13:\"حذف عيد\";s:1:\"c\";s:3:\"web\";s:1:\"r\";a:1:{i:0;i:1;}}i:91;a:4:{s:1:\"a\";i:92;s:1:\"b\";s:19:\"عديه العيد\";s:1:\"c\";s:3:\"web\";s:1:\"r\";a:1:{i:0;i:1;}}i:92;a:4:{s:1:\"a\";i:93;s:1:\"b\";s:30:\"اضافه عديه العيد\";s:1:\"c\";s:3:\"web\";s:1:\"r\";a:1:{i:0;i:1;}}i:93;a:4:{s:1:\"a\";i:94;s:1:\"b\";s:30:\"تعديل عديه العيد\";s:1:\"c\";s:3:\"web\";s:1:\"r\";a:1:{i:0;i:1;}}i:94;a:4:{s:1:\"a\";i:95;s:1:\"b\";s:26:\"حذف عديه العيد\";s:1:\"c\";s:3:\"web\";s:1:\"r\";a:1:{i:0;i:1;}}i:95;a:4:{s:1:\"a\";i:96;s:1:\"b\";s:38:\"طلبات الموظفين ايميل\";s:1:\"c\";s:3:\"web\";s:1:\"r\";a:1:{i:0;i:1;}}i:96;a:4:{s:1:\"a\";i:97;s:1:\"b\";s:36:\"اداره الوقت الاضافي\";s:1:\"c\";s:3:\"web\";s:1:\"r\";a:1:{i:0;i:1;}}}s:5:\"roles\";a:1:{i:0;a:3:{s:1:\"a\";i:1;s:1:\"b\";s:5:\"owner\";s:1:\"c\";s:3:\"web\";}}}', 1786398658);
+('spatie.permission.cache', 'a:3:{s:5:\"alias\";a:4:{s:1:\"a\";s:2:\"id\";s:1:\"b\";s:4:\"name\";s:1:\"c\";s:10:\"guard_name\";s:1:\"r\";s:5:\"roles\";}s:11:\"permissions\";a:97:{i:0;a:4:{s:1:\"a\";i:1;s:1:\"b\";s:16:\"الموظفين\";s:1:\"c\";s:3:\"web\";s:1:\"r\";a:1:{i:0;i:1;}}i:1;a:4:{s:1:\"a\";i:2;s:1:\"b\";s:19:\"اضافه موظف\";s:1:\"c\";s:3:\"web\";s:1:\"r\";a:1:{i:0;i:1;}}i:2;a:4:{s:1:\"a\";i:3;s:1:\"b\";s:19:\"تعديل موظف\";s:1:\"c\";s:3:\"web\";s:1:\"r\";a:1:{i:0;i:1;}}i:3;a:4:{s:1:\"a\";i:4;s:1:\"b\";s:15:\"حذف موظف\";s:1:\"c\";s:3:\"web\";s:1:\"r\";a:1:{i:0;i:1;}}i:4;a:4:{s:1:\"a\";i:5;s:1:\"b\";s:8:\"شيفت\";s:1:\"c\";s:3:\"web\";s:1:\"r\";a:1:{i:0;i:1;}}i:5;a:4:{s:1:\"a\";i:6;s:1:\"b\";s:19:\"اضافه شيفت\";s:1:\"c\";s:3:\"web\";s:1:\"r\";a:1:{i:0;i:1;}}i:6;a:4:{s:1:\"a\";i:7;s:1:\"b\";s:19:\"تعديل شيفت\";s:1:\"c\";s:3:\"web\";s:1:\"r\";a:1:{i:0;i:1;}}i:7;a:4:{s:1:\"a\";i:8;s:1:\"b\";s:15:\"حذف شيفت\";s:1:\"c\";s:3:\"web\";s:1:\"r\";a:1:{i:0;i:1;}}i:8;a:4:{s:1:\"a\";i:9;s:1:\"b\";s:19:\"تبديل شيفت\";s:1:\"c\";s:3:\"web\";s:1:\"r\";a:1:{i:0;i:1;}}i:9;a:4:{s:1:\"a\";i:10;s:1:\"b\";s:28:\"تبديل شيفت موظف\";s:1:\"c\";s:3:\"web\";s:1:\"r\";a:1:{i:0;i:1;}}i:10;a:4:{s:1:\"a\";i:11;s:1:\"b\";s:28:\"اضافه شيفت موظف\";s:1:\"c\";s:3:\"web\";s:1:\"r\";a:1:{i:0;i:1;}}i:11;a:4:{s:1:\"a\";i:12;s:1:\"b\";s:28:\"تعديل شيفت موظف\";s:1:\"c\";s:3:\"web\";s:1:\"r\";a:1:{i:0;i:1;}}i:12;a:4:{s:1:\"a\";i:13;s:1:\"b\";s:25:\"حذف  شيفت موظف\";s:1:\"c\";s:3:\"web\";s:1:\"r\";a:1:{i:0;i:1;}}i:13;a:4:{s:1:\"a\";i:14;s:1:\"b\";s:26:\"تبديل شيفت قسم\";s:1:\"c\";s:3:\"web\";s:1:\"r\";a:1:{i:0;i:1;}}i:14;a:4:{s:1:\"a\";i:15;s:1:\"b\";s:26:\"اضافه شيفت قسم\";s:1:\"c\";s:3:\"web\";s:1:\"r\";a:1:{i:0;i:1;}}i:15;a:4:{s:1:\"a\";i:16;s:1:\"b\";s:26:\"تعديل شيفت قسم\";s:1:\"c\";s:3:\"web\";s:1:\"r\";a:1:{i:0;i:1;}}i:16;a:4:{s:1:\"a\";i:17;s:1:\"b\";s:23:\"حذف  شيفت قسم\";s:1:\"c\";s:3:\"web\";s:1:\"r\";a:1:{i:0;i:1;}}i:17;a:4:{s:1:\"a\";i:18;s:1:\"b\";s:6:\"اذن\";s:1:\"c\";s:3:\"web\";s:1:\"r\";a:1:{i:0;i:1;}}i:18;a:4:{s:1:\"a\";i:19;s:1:\"b\";s:17:\"اضافه اذن\";s:1:\"c\";s:3:\"web\";s:1:\"r\";a:1:{i:0;i:1;}}i:19;a:4:{s:1:\"a\";i:20;s:1:\"b\";s:17:\"تعديل اذن\";s:1:\"c\";s:3:\"web\";s:1:\"r\";a:1:{i:0;i:1;}}i:20;a:4:{s:1:\"a\";i:21;s:1:\"b\";s:13:\"حذف اذن\";s:1:\"c\";s:3:\"web\";s:1:\"r\";a:1:{i:0;i:1;}}i:21;a:4:{s:1:\"a\";i:22;s:1:\"b\";s:38:\"اداره بصمات الموظفين\";s:1:\"c\";s:3:\"web\";s:1:\"r\";a:1:{i:0;i:1;}}i:22;a:4:{s:1:\"a\";i:23;s:1:\"b\";s:28:\"اضافه بصمه موظف\";s:1:\"c\";s:3:\"web\";s:1:\"r\";a:1:{i:0;i:1;}}i:23;a:4:{s:1:\"a\";i:24;s:1:\"b\";s:28:\"تعديل بصمه موظف\";s:1:\"c\";s:3:\"web\";s:1:\"r\";a:1:{i:0;i:1;}}i:24;a:4:{s:1:\"a\";i:25;s:1:\"b\";s:24:\"حذف بصمه موظف\";s:1:\"c\";s:3:\"web\";s:1:\"r\";a:1:{i:0;i:1;}}i:25;a:4:{s:1:\"a\";i:26;s:1:\"b\";s:17:\"طلب اجازه\";s:1:\"c\";s:3:\"web\";s:1:\"r\";a:1:{i:0;i:1;}}i:26;a:4:{s:1:\"a\";i:27;s:1:\"b\";s:21:\"اضافه اجازه\";s:1:\"c\";s:3:\"web\";s:1:\"r\";a:1:{i:0;i:1;}}i:27;a:4:{s:1:\"a\";i:28;s:1:\"b\";s:21:\"تعديل اجازه\";s:1:\"c\";s:3:\"web\";s:1:\"r\";a:1:{i:0;i:1;}}i:28;a:4:{s:1:\"a\";i:29;s:1:\"b\";s:17:\"حذف اجازه\";s:1:\"c\";s:3:\"web\";s:1:\"r\";a:1:{i:0;i:1;}}i:29;a:4:{s:1:\"a\";i:30;s:1:\"b\";s:14:\"الاقسام\";s:1:\"c\";s:3:\"web\";s:1:\"r\";a:1:{i:0;i:1;}}i:30;a:4:{s:1:\"a\";i:31;s:1:\"b\";s:17:\"اضافه قسم\";s:1:\"c\";s:3:\"web\";s:1:\"r\";a:1:{i:0;i:1;}}i:31;a:4:{s:1:\"a\";i:32;s:1:\"b\";s:17:\"تعديل قسم\";s:1:\"c\";s:3:\"web\";s:1:\"r\";a:1:{i:0;i:1;}}i:32;a:4:{s:1:\"a\";i:33;s:1:\"b\";s:13:\"حذف قسم\";s:1:\"c\";s:3:\"web\";s:1:\"r\";a:1:{i:0;i:1;}}i:33;a:4:{s:1:\"a\";i:34;s:1:\"b\";s:10:\"الخصم\";s:1:\"c\";s:3:\"web\";s:1:\"r\";a:1:{i:0;i:1;}}i:34;a:4:{s:1:\"a\";i:35;s:1:\"b\";s:17:\"اضافه خصم\";s:1:\"c\";s:3:\"web\";s:1:\"r\";a:1:{i:0;i:1;}}i:35;a:4:{s:1:\"a\";i:36;s:1:\"b\";s:17:\"تعديل خصم\";s:1:\"c\";s:3:\"web\";s:1:\"r\";a:1:{i:0;i:1;}}i:36;a:4:{s:1:\"a\";i:37;s:1:\"b\";s:13:\"حذف خصم\";s:1:\"c\";s:3:\"web\";s:1:\"r\";a:1:{i:0;i:1;}}i:37;a:4:{s:1:\"a\";i:38;s:1:\"b\";s:6:\"سلف\";s:1:\"c\";s:3:\"web\";s:1:\"r\";a:1:{i:0;i:1;}}i:38;a:4:{s:1:\"a\";i:39;s:1:\"b\";s:17:\"اضافه سلف\";s:1:\"c\";s:3:\"web\";s:1:\"r\";a:1:{i:0;i:1;}}i:39;a:4:{s:1:\"a\";i:40;s:1:\"b\";s:17:\"تعديل سلف\";s:1:\"c\";s:3:\"web\";s:1:\"r\";a:1:{i:0;i:1;}}i:40;a:4:{s:1:\"a\";i:41;s:1:\"b\";s:13:\"حذف سلف\";s:1:\"c\";s:3:\"web\";s:1:\"r\";a:1:{i:0;i:1;}}i:41;a:4:{s:1:\"a\";i:42;s:1:\"b\";s:14:\"التقرير\";s:1:\"c\";s:3:\"web\";s:1:\"r\";a:1:{i:0;i:1;}}i:42;a:4:{s:1:\"a\";i:43;s:1:\"b\";s:19:\"تقرير موظف\";s:1:\"c\";s:3:\"web\";s:1:\"r\";a:1:{i:0;i:1;}}i:43;a:4:{s:1:\"a\";i:44;s:1:\"b\";s:30:\"استيراد ملف موظف\";s:1:\"c\";s:3:\"web\";s:1:\"r\";a:1:{i:0;i:1;}}i:44;a:4:{s:1:\"a\";i:45;s:1:\"b\";s:15:\"بحث موظف\";s:1:\"c\";s:3:\"web\";s:1:\"r\";a:1:{i:0;i:1;}}i:45;a:4:{s:1:\"a\";i:46;s:1:\"b\";s:23:\"تقرير اجمالي\";s:1:\"c\";s:3:\"web\";s:1:\"r\";a:1:{i:0;i:1;}}i:46;a:4:{s:1:\"a\";i:47;s:1:\"b\";s:23:\"تقرير بالقسم\";s:1:\"c\";s:3:\"web\";s:1:\"r\";a:1:{i:0;i:1;}}i:47;a:4:{s:1:\"a\";i:48;s:1:\"b\";s:28:\"استيراد ملف قسم\";s:1:\"c\";s:3:\"web\";s:1:\"r\";a:1:{i:0;i:1;}}i:48;a:4:{s:1:\"a\";i:49;s:1:\"b\";s:17:\"بحث القسم\";s:1:\"c\";s:3:\"web\";s:1:\"r\";a:1:{i:0;i:1;}}i:49;a:4:{s:1:\"a\";i:50;s:1:\"b\";s:33:\"اعدادات المستخدين\";s:1:\"c\";s:3:\"web\";s:1:\"r\";a:1:{i:0;i:1;}}i:50;a:4:{s:1:\"a\";i:51;s:1:\"b\";s:20:\"المستخدمين\";s:1:\"c\";s:3:\"web\";s:1:\"r\";a:1:{i:0;i:1;}}i:51;a:4:{s:1:\"a\";i:52;s:1:\"b\";s:23:\"اضافه مستخدم\";s:1:\"c\";s:3:\"web\";s:1:\"r\";a:1:{i:0;i:1;}}i:52;a:4:{s:1:\"a\";i:53;s:1:\"b\";s:23:\"تعديل مستخدم\";s:1:\"c\";s:3:\"web\";s:1:\"r\";a:1:{i:0;i:1;}}i:53;a:4:{s:1:\"a\";i:54;s:1:\"b\";s:19:\"حذف مستخدم\";s:1:\"c\";s:3:\"web\";s:1:\"r\";a:1:{i:0;i:1;}}i:54;a:4:{s:1:\"a\";i:55;s:1:\"b\";s:18:\"الصلاحيات\";s:1:\"c\";s:3:\"web\";s:1:\"r\";a:1:{i:0;i:1;}}i:55;a:4:{s:1:\"a\";i:56;s:1:\"b\";s:19:\"عرض صلاحية\";s:1:\"c\";s:3:\"web\";s:1:\"r\";a:1:{i:0;i:1;}}i:56;a:4:{s:1:\"a\";i:57;s:1:\"b\";s:23:\"اضافة صلاحية\";s:1:\"c\";s:3:\"web\";s:1:\"r\";a:1:{i:0;i:1;}}i:57;a:4:{s:1:\"a\";i:58;s:1:\"b\";s:23:\"تعديل صلاحية\";s:1:\"c\";s:3:\"web\";s:1:\"r\";a:1:{i:0;i:1;}}i:58;a:4:{s:1:\"a\";i:59;s:1:\"b\";s:19:\"حذف صلاحية\";s:1:\"c\";s:3:\"web\";s:1:\"r\";a:1:{i:0;i:1;}}i:59;a:4:{s:1:\"a\";i:60;s:1:\"b\";s:36:\"سحب السجلات الهواتف\";s:1:\"c\";s:3:\"web\";s:1:\"r\";a:1:{i:0;i:1;}}i:60;a:4:{s:1:\"a\";i:61;s:1:\"b\";s:17:\"IP-الاتصال\";s:1:\"c\";s:3:\"web\";s:1:\"r\";a:1:{i:0;i:1;}}i:61;a:4:{s:1:\"a\";i:62;s:1:\"b\";s:41:\"سحب الموظفين من البصمه\";s:1:\"c\";s:3:\"web\";s:1:\"r\";a:1:{i:0;i:1;}}i:62;a:4:{s:1:\"a\";i:63;s:1:\"b\";s:8:\"حافز\";s:1:\"c\";s:3:\"web\";s:1:\"r\";a:1:{i:0;i:1;}}i:63;a:4:{s:1:\"a\";i:64;s:1:\"b\";s:19:\"اضافه حافز\";s:1:\"c\";s:3:\"web\";s:1:\"r\";a:1:{i:0;i:1;}}i:64;a:4:{s:1:\"a\";i:65;s:1:\"b\";s:19:\"تعديل حافز\";s:1:\"c\";s:3:\"web\";s:1:\"r\";a:1:{i:0;i:1;}}i:65;a:4:{s:1:\"a\";i:66;s:1:\"b\";s:15:\"حذف حافز\";s:1:\"c\";s:3:\"web\";s:1:\"r\";a:1:{i:0;i:1;}}i:66;a:4:{s:1:\"a\";i:67;s:1:\"b\";s:23:\"شؤن الموظفين\";s:1:\"c\";s:3:\"web\";s:1:\"r\";a:1:{i:0;i:1;}}i:67;a:4:{s:1:\"a\";i:68;s:1:\"b\";s:6:\"قرض\";s:1:\"c\";s:3:\"web\";s:1:\"r\";a:1:{i:0;i:1;}}i:68;a:4:{s:1:\"a\";i:69;s:1:\"b\";s:17:\"اضافه قرض\";s:1:\"c\";s:3:\"web\";s:1:\"r\";a:1:{i:0;i:1;}}i:69;a:4:{s:1:\"a\";i:70;s:1:\"b\";s:17:\"تعديل قرض\";s:1:\"c\";s:3:\"web\";s:1:\"r\";a:1:{i:0;i:1;}}i:70;a:4:{s:1:\"a\";i:71;s:1:\"b\";s:13:\"حذف قرض\";s:1:\"c\";s:3:\"web\";s:1:\"r\";a:1:{i:0;i:1;}}i:71;a:4:{s:1:\"a\";i:72;s:1:\"b\";s:21:\"خصم مواصلات\";s:1:\"c\";s:3:\"web\";s:1:\"r\";a:1:{i:0;i:1;}}i:72;a:4:{s:1:\"a\";i:73;s:1:\"b\";s:28:\"حذف خصم مواصلات\";s:1:\"c\";s:3:\"web\";s:1:\"r\";a:1:{i:0;i:1;}}i:73;a:4:{s:1:\"a\";i:74;s:1:\"b\";s:32:\"تعديل خصم مواصلات\";s:1:\"c\";s:3:\"web\";s:1:\"r\";a:1:{i:0;i:1;}}i:74;a:4:{s:1:\"a\";i:75;s:1:\"b\";s:32:\"اضافه خصم مواصلات\";s:1:\"c\";s:3:\"web\";s:1:\"r\";a:1:{i:0;i:1;}}i:75;a:4:{s:1:\"a\";i:76;s:1:\"b\";s:21:\"بدل مواصلات\";s:1:\"c\";s:3:\"web\";s:1:\"r\";a:1:{i:0;i:1;}}i:76;a:4:{s:1:\"a\";i:77;s:1:\"b\";s:28:\"حذف بدل مواصلات\";s:1:\"c\";s:3:\"web\";s:1:\"r\";a:1:{i:0;i:1;}}i:77;a:4:{s:1:\"a\";i:78;s:1:\"b\";s:32:\"تعديل بدل مواصلات\";s:1:\"c\";s:3:\"web\";s:1:\"r\";a:1:{i:0;i:1;}}i:78;a:4:{s:1:\"a\";i:79;s:1:\"b\";s:32:\"اضافه بدل مواصلات\";s:1:\"c\";s:3:\"web\";s:1:\"r\";a:1:{i:0;i:1;}}i:79;a:4:{s:1:\"a\";i:80;s:1:\"b\";s:18:\"التامينات\";s:1:\"c\";s:3:\"web\";s:1:\"r\";a:1:{i:0;i:1;}}i:80;a:4:{s:1:\"a\";i:81;s:1:\"b\";s:25:\"اضافه تامينات\";s:1:\"c\";s:3:\"web\";s:1:\"r\";a:1:{i:0;i:1;}}i:81;a:4:{s:1:\"a\";i:82;s:1:\"b\";s:21:\"حذف تامينات\";s:1:\"c\";s:3:\"web\";s:1:\"r\";a:1:{i:0;i:1;}}i:82;a:4:{s:1:\"a\";i:83;s:1:\"b\";s:25:\"تعديل تامينات\";s:1:\"c\";s:3:\"web\";s:1:\"r\";a:1:{i:0;i:1;}}i:83;a:4:{s:1:\"a\";i:84;s:1:\"b\";s:18:\"المشتريات\";s:1:\"c\";s:3:\"web\";s:1:\"r\";a:1:{i:0;i:1;}}i:84;a:4:{s:1:\"a\";i:85;s:1:\"b\";s:25:\"اضافه مشتريات\";s:1:\"c\";s:3:\"web\";s:1:\"r\";a:1:{i:0;i:1;}}i:85;a:4:{s:1:\"a\";i:86;s:1:\"b\";s:21:\"حذف مشتريات\";s:1:\"c\";s:3:\"web\";s:1:\"r\";a:1:{i:0;i:1;}}i:86;a:4:{s:1:\"a\";i:87;s:1:\"b\";s:25:\"تعديل مشتريات\";s:1:\"c\";s:3:\"web\";s:1:\"r\";a:1:{i:0;i:1;}}i:87;a:4:{s:1:\"a\";i:88;s:1:\"b\";s:19:\"ايام العيد\";s:1:\"c\";s:3:\"web\";s:1:\"r\";a:1:{i:0;i:1;}}i:88;a:4:{s:1:\"a\";i:89;s:1:\"b\";s:17:\"اضافه عيد\";s:1:\"c\";s:3:\"web\";s:1:\"r\";a:1:{i:0;i:1;}}i:89;a:4:{s:1:\"a\";i:90;s:1:\"b\";s:17:\"تعديل عيد\";s:1:\"c\";s:3:\"web\";s:1:\"r\";a:1:{i:0;i:1;}}i:90;a:4:{s:1:\"a\";i:91;s:1:\"b\";s:13:\"حذف عيد\";s:1:\"c\";s:3:\"web\";s:1:\"r\";a:1:{i:0;i:1;}}i:91;a:4:{s:1:\"a\";i:92;s:1:\"b\";s:19:\"عديه العيد\";s:1:\"c\";s:3:\"web\";s:1:\"r\";a:1:{i:0;i:1;}}i:92;a:4:{s:1:\"a\";i:93;s:1:\"b\";s:30:\"اضافه عديه العيد\";s:1:\"c\";s:3:\"web\";s:1:\"r\";a:1:{i:0;i:1;}}i:93;a:4:{s:1:\"a\";i:94;s:1:\"b\";s:30:\"تعديل عديه العيد\";s:1:\"c\";s:3:\"web\";s:1:\"r\";a:1:{i:0;i:1;}}i:94;a:4:{s:1:\"a\";i:95;s:1:\"b\";s:26:\"حذف عديه العيد\";s:1:\"c\";s:3:\"web\";s:1:\"r\";a:1:{i:0;i:1;}}i:95;a:4:{s:1:\"a\";i:96;s:1:\"b\";s:38:\"طلبات الموظفين ايميل\";s:1:\"c\";s:3:\"web\";s:1:\"r\";a:1:{i:0;i:1;}}i:96;a:4:{s:1:\"a\";i:97;s:1:\"b\";s:36:\"اداره الوقت الاضافي\";s:1:\"c\";s:3:\"web\";s:1:\"r\";a:1:{i:0;i:1;}}}s:5:\"roles\";a:1:{i:0;a:3:{s:1:\"a\";i:1;s:1:\"b\";s:5:\"owner\";s:1:\"c\";s:3:\"web\";}}}', 1792191354);
 
 -- --------------------------------------------------------
 
@@ -225,6 +225,28 @@ CREATE TABLE `counts` (
   `latitude_break_out` decimal(10,8) DEFAULT NULL,
   `longitude_break_out` decimal(11,8) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `counts`
+--
+
+INSERT INTO `counts` (`id`, `numid`, `name`, `shift`, `in_duty`, `out_duty`, `date`, `absent`, `absent_dis`, `friday`, `eid`, `in`, `out`, `dis_loan`, `break_in`, `break_out`, `ot`, `othours`, `count_ot`, `dayh`, `early`, `dis`, `disout`, `kabdd`, `kabddis`, `check_loction`, `shift_id`, `section_id`, `employees_id`, `created_at`, `updated_at`, `latitude_in`, `longitude_in`, `latitude_out`, `longitude_out`, `latitude_break_in`, `longitude_break_in`, `latitude_break_out`, `longitude_break_out`) VALUES
+(1, 1, 'gamal', NULL, '10:00:00', '19:00:00', '2026-10-01', 1, 40.73, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, '00:00:00', 0, NULL, 1222, NULL, NULL, 7, 4, 32, '2026-10-16 18:15:34', '2026-10-16 18:15:34', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+(2, 1, 'gamal', NULL, '10:00:00', '19:00:00', '2026-10-02', 1, 40.73, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, '00:00:00', 0, NULL, 1222, NULL, NULL, 7, 4, 32, '2026-10-16 18:15:34', '2026-10-16 18:15:34', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+(3, 1, 'gamal', NULL, '10:00:00', '19:00:00', '2026-10-03', 1, 40.73, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, '00:00:00', 0, NULL, 1222, NULL, NULL, 7, 4, 32, '2026-10-16 18:15:34', '2026-10-16 18:15:34', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+(4, 1, 'gamal', NULL, '10:00:00', '19:00:00', '2026-10-04', 1, 40.73, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, '00:00:00', 0, NULL, 1222, NULL, NULL, 7, 4, 32, '2026-10-16 18:15:34', '2026-10-16 18:15:34', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+(5, 1, 'gamal', NULL, '10:00:00', '19:00:00', '2026-10-05', 1, 40.73, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, '00:00:00', 0, NULL, 1222, NULL, NULL, 7, 4, 32, '2026-10-16 18:15:34', '2026-10-16 18:15:34', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+(6, 1, 'gamal', NULL, '10:00:00', '19:00:00', '2026-10-06', 1, 40.73, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, '00:00:00', 0, NULL, 1222, NULL, NULL, 7, 4, 32, '2026-10-16 18:15:34', '2026-10-16 18:15:34', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+(7, 1, 'gamal', NULL, '10:00:00', '19:00:00', '2026-10-07', 1, 40.73, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, '00:00:00', 0, NULL, 1222, NULL, NULL, 7, 4, 32, '2026-10-16 18:15:34', '2026-10-16 18:15:34', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+(8, 1, 'gamal', NULL, '10:00:00', '19:00:00', '2026-10-08', 2, NULL, NULL, NULL, '15:11:29', '15:11:35', NULL, NULL, NULL, NULL, NULL, NULL, 6, '05:11:29', 22.63, 0, 1222, NULL, NULL, 7, 4, 32, '2026-10-16 18:15:34', '2026-10-16 18:15:34', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+(9, 1, 'gamal', NULL, '10:00:00', '19:00:00', '2026-10-09', 1, 40.73, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, '00:00:00', 0, NULL, 1222, NULL, NULL, 7, 4, 32, '2026-10-16 18:15:34', '2026-10-16 18:15:34', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+(10, 1, 'gamal', NULL, '10:00:00', '19:00:00', '2026-10-10', 1, 40.73, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, '00:00:00', 0, NULL, 1222, NULL, NULL, 7, 4, 32, '2026-10-16 18:15:34', '2026-10-16 18:15:34', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+(11, 1, 'gamal', NULL, '10:00:00', '19:00:00', '2026-10-11', 1, 40.73, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, '00:00:00', 0, NULL, 1222, NULL, NULL, 7, 4, 32, '2026-10-16 18:15:34', '2026-10-16 18:15:34', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+(12, 1, 'gamal', NULL, '10:00:00', '19:00:00', '2026-10-12', 1, 40.73, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, '00:00:00', 0, NULL, 1222, NULL, NULL, 7, 4, 32, '2026-10-16 18:15:34', '2026-10-16 18:15:34', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+(13, 1, 'gamal', NULL, '10:00:00', '19:00:00', '2026-10-13', 1, 40.73, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, '00:00:00', 0, NULL, 1222, NULL, NULL, 7, 4, 32, '2026-10-16 18:15:34', '2026-10-16 18:15:34', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+(14, 1, 'gamal', NULL, '10:00:00', '19:00:00', '2026-10-14', 1, 40.73, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, '00:00:00', 0, NULL, 1222, NULL, NULL, 7, 4, 32, '2026-10-16 18:15:34', '2026-10-16 18:15:34', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+(15, 1, 'gamal', NULL, '10:00:00', '19:00:00', '2026-10-15', 2, NULL, NULL, NULL, '20:10:57', '20:12:58', NULL, NULL, NULL, '20:12:58', 4378, NULL, 121, '10:10:57', 22.63, NULL, 1222, NULL, NULL, 7, 4, 32, '2026-10-16 18:15:34', '2026-10-16 18:15:34', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+(16, 1, 'gamal', NULL, '10:00:00', '19:00:00', '2026-10-16', 2, NULL, NULL, NULL, '19:07:00', '19:15:05', NULL, NULL, NULL, '19:15:05', 905, NULL, 485, '09:07:00', 22.63, NULL, 1222, NULL, NULL, 7, 4, 32, '2026-10-16 18:15:34', '2026-10-16 18:15:34', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -550,6 +572,7 @@ CREATE TABLE `eids` (
 CREATE TABLE `employees` (
   `id` bigint(20) UNSIGNED NOT NULL,
   `num` int(11) NOT NULL,
+  `zkt_synced` tinyint(4) NOT NULL DEFAULT 0 COMMENT '0=not synced, 1=synced to ZK device',
   `name` varchar(255) NOT NULL,
   `email` varchar(255) DEFAULT NULL,
   `password` varchar(255) DEFAULT NULL,
@@ -576,8 +599,8 @@ CREATE TABLE `employees` (
 -- Dumping data for table `employees`
 --
 
-INSERT INTO `employees` (`id`, `num`, `name`, `email`, `password`, `password_email`, `age`, `mobile`, `role_zkt`, `title`, `friday`, `free_d`, `sysemp`, `choosesys`, `check`, `ipz`, `section_id`, `shift_id`, `kabd`, `created_at`, `updated_at`, `fingerprint`) VALUES
-(25, 1, 'aaaa', NULL, NULL, NULL, NULL, NULL, 0, NULL, 0, '[\"\\u0627\\u0644\\u062c\\u0645\\u0639\\u0629\"]', 30, 1, 0, NULL, 4, 7, 5000, '2026-08-11 00:07:25', '2026-08-11 00:07:25', NULL);
+INSERT INTO `employees` (`id`, `num`, `zkt_synced`, `name`, `email`, `password`, `password_email`, `age`, `mobile`, `role_zkt`, `title`, `friday`, `free_d`, `sysemp`, `choosesys`, `check`, `ipz`, `section_id`, `shift_id`, `kabd`, `created_at`, `updated_at`, `fingerprint`) VALUES
+(32, 1, 1, 'gamal', NULL, NULL, NULL, NULL, NULL, 0, NULL, 0, '[\"\\u0644\\u0627 \\u064a\\u0648\\u062c\\u062f\"]', 30, 1, 0, 'A6F5224260946', 4, 7, 1222, '2026-10-16 17:05:00', '2026-10-16 17:11:47', NULL);
 
 -- --------------------------------------------------------
 
@@ -922,7 +945,11 @@ INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES
 (62, '2026_07_07_000001_add_sn_to_ipzkts_table', 16),
 (63, '2026_07_07_164241_add_last_activity_to_ipzkts_table', 17),
 (64, '2026_07_11_133506_add_phone_password_to_employees_table', 18),
-(65, '2026_07_04_005652_create_employee_locations_table', 19);
+(65, '2026_07_04_005652_create_employee_locations_table', 19),
+(66, '2026_10_16_183326_add_zkt_synced_to_employees_table', 20),
+(67, '2026_10_16_190823_create_zkt_deleted_users_table', 21),
+(68, '2026_10_16_194400_create_zkt_synced_device_users_table', 22),
+(69, '2026_10_16_195500_create_zkt_device_sync_tables', 23);
 
 -- --------------------------------------------------------
 
@@ -1213,6 +1240,14 @@ CREATE TABLE `plzots` (
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+--
+-- Dumping data for table `plzots`
+--
+
+INSERT INTO `plzots` (`id`, `numid`, `name`, `in_duty`, `out_duty`, `date`, `in`, `out`, `ot`, `othours`, `count_ot`, `status`, `latitude_in`, `longitude_in`, `latitude_out`, `longitude_out`, `created_at`, `updated_at`) VALUES
+(3868, 1, 'gamal', '10:00:00', '19:00:00', '2026-10-15', '20:10:57', '20:12:58', NULL, 4378, 5.50, 0, NULL, NULL, NULL, NULL, '2026-10-16 18:15:34', '2026-10-16 18:15:34'),
+(3869, 1, 'gamal', '10:00:00', '19:00:00', '2026-10-16', '19:07:00', '19:15:05', NULL, 905, 1.14, 0, NULL, NULL, NULL, NULL, '2026-10-16 18:15:34', '2026-10-16 18:15:34');
+
 -- --------------------------------------------------------
 
 --
@@ -1413,6 +1448,13 @@ CREATE TABLE `salves` (
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+--
+-- Dumping data for table `salves`
+--
+
+INSERT INTO `salves` (`id`, `name`, `salf`, `date`, `dec`, `employees_id`, `section_id`, `created_at`, `updated_at`) VALUES
+(299, NULL, 100, '2026-10-16', '000', 32, 4, '2026-10-16 18:15:23', '2026-10-16 18:15:23');
+
 -- --------------------------------------------------------
 
 --
@@ -1453,10 +1495,7 @@ CREATE TABLE `sessions` (
 --
 
 INSERT INTO `sessions` (`id`, `user_id`, `ip_address`, `user_agent`, `payload`, `last_activity`) VALUES
-('ALBrsJyCTwx31UGpK2IZrctNE0NrvyYEjSCkXPWw', NULL, '216.73.216.248', 'Mozilla/5.0 AppleWebKit/537.36 (KHTML, like Gecko; compatible; ClaudeBot/1.0; +claudebot@anthropic.com)', 'YTo0OntzOjY6Il90b2tlbiI7czo0MDoiN0NiVHp2NVVaVEFiNEoxS3BOZk02a1FNdUdjOUZLcGNTZXByNWp1RCI7czozOiJ1cmwiO2E6MTp7czo4OiJpbnRlbmRlZCI7czozOToiaHR0cHM6Ly9yb29mLnBpeGVsc2VjdXIuY29tL3NpdGVtYXAueG1sIjt9czo5OiJfcHJldmlvdXMiO2E6MTp7czozOiJ1cmwiO3M6MzM6Imh0dHBzOi8vcm9vZi5waXhlbHNlY3VyLmNvbS9sb2dpbiI7fXM6NjoiX2ZsYXNoIjthOjI6e3M6Mzoib2xkIjthOjA6e31zOjM6Im5ldyI7YTowOnt9fX0=', 1786390622),
-('lVZ6GRUW5yUAC4EK0NFxW6D74BntNfzI73xmsQzt', 1, '197.43.49.167', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36 Edg/151.0.0.0', 'YTo1OntzOjY6Il90b2tlbiI7czo0MDoiamVrSGJiQ3NSNm5VU2ZxTVFoY2IycjIyYllHNWNTTmRveldNQ0N6cSI7czo5OiJfcHJldmlvdXMiO2E6MTp7czozOiJ1cmwiO3M6NDg6Imh0dHBzOi8vcm9vZi5waXhlbHNlY3VyLmNvbS9ub3RpZmljYXRpb25zL2xhdGVzdCI7fXM6NjoiX2ZsYXNoIjthOjI6e3M6Mzoib2xkIjthOjA6e31zOjM6Im5ldyI7YTowOnt9fXM6MzoidXJsIjthOjA6e31zOjUwOiJsb2dpbl93ZWJfNTliYTM2YWRkYzJiMmY5NDAxNTgwZjAxNGM3ZjU4ZWE0ZTMwOTg5ZCI7aToxO30=', 1786396126),
-('rBWL2189rMLMV8yXtP9xiC9TgIkTGk2nQheCrk8p', NULL, '161.35.80.206', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/134.0.0.0 Safari/537.3', 'YTo0OntzOjY6Il90b2tlbiI7czo0MDoibktmN2NQMWhjNGhTdTJnZ1RnSFdyWVhnY21HVWROQ2VvaGRhaEd5WiI7czo5OiJfcHJldmlvdXMiO2E6MTp7czozOiJ1cmwiO3M6MzM6Imh0dHBzOi8vcm9vZi5waXhlbHNlY3VyLmNvbS9sb2dpbiI7fXM6NjoiX2ZsYXNoIjthOjI6e3M6Mzoib2xkIjthOjA6e31zOjM6Im5ldyI7YTowOnt9fXM6MzoidXJsIjthOjE6e3M6ODoiaW50ZW5kZWQiO3M6Mzc6Imh0dHBzOi8vcm9vZi5waXhlbHNlY3VyLmNvbS9kYXNoYm9hcmQiO319', 1786394384),
-('sJepDvyArBYB4dj8eJpu9euBGObiwKvSa35yxRDj', NULL, '104.236.44.95', 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:66.0) WhatCMS/1.0', 'YTo0OntzOjY6Il90b2tlbiI7czo0MDoiTlpaT0NWRDRtN2pxNGkxaE5Dc2hja3R4cUhFUklzZ3htRXliRjNVNiI7czo5OiJfcHJldmlvdXMiO2E6MTp7czozOiJ1cmwiO3M6MzM6Imh0dHBzOi8vcm9vZi5waXhlbHNlY3VyLmNvbS9sb2dpbiI7fXM6NjoiX2ZsYXNoIjthOjI6e3M6Mzoib2xkIjthOjA6e31zOjM6Im5ldyI7YTowOnt9fXM6MzoidXJsIjthOjE6e3M6ODoiaW50ZW5kZWQiO3M6Mzc6Imh0dHBzOi8vcm9vZi5waXhlbHNlY3VyLmNvbS9kYXNoYm9hcmQiO319', 1786394307);
+('RsvrJr2trXGdH4bT4ns542IN0aqvSid4WZL5SXGq', 1, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/155.0.0.0 Safari/537.36 Edg/155.0.0.0', 'YTo1OntzOjY6Il90b2tlbiI7czo0MDoiNm5MQjlyZ3N6azh1dTVtVldDOW9rUTRiaW5jSWRoQWVsMXg3YzR6YyI7czozOiJ1cmwiO2E6MDp7fXM6OToiX3ByZXZpb3VzIjthOjE6e3M6MzoidXJsIjtzOjM2OiJodHRwOi8vc2F5YWQ6NzMvbm90aWZpY2F0aW9ucy9sYXRlc3QiO31zOjY6Il9mbGFzaCI7YToyOntzOjM6Im9sZCI7YTowOnt9czozOiJuZXciO2E6MDp7fX1zOjUwOiJsb2dpbl93ZWJfNTliYTM2YWRkYzJiMmY5NDAxNTgwZjAxNGM3ZjU4ZWE0ZTMwOTg5ZCI7aToxO30=', 1792178140);
 
 -- --------------------------------------------------------
 
@@ -1497,7 +1536,7 @@ CREATE TABLE `shifts` (
 --
 
 INSERT INTO `shifts` (`id`, `name`, `from`, `to`, `shift_time`, `late`, `late1`, `late2`, `late3`, `bdry`, `workh`, `dism`, `dism1`, `dism2`, `dism3`, `disout`, `break_in`, `break_out`, `b_out_dis`, `b_in_dis`, `absent`, `start_ot`, `ot`, `created_at`, `updated_at`) VALUES
-(7, 'SHIFT', '10:00:00', '19:00:00', 1, 15, 0, 0, 0, 0, 9, 2, 0, 0, 0, 0, NULL, NULL, NULL, NULL, 1, '19:00:00', 1, '2026-08-10 01:11:02', '2026-08-10 01:11:02');
+(7, 'SHIFT', '10:00:00', '19:00:00', 1, 15, 120, 0, 0, 0, 9, 60, 300, 0, 0, 0, NULL, NULL, NULL, NULL, 1, '19:00:00', 1, '2026-08-10 01:11:02', '2026-10-15 21:01:19');
 
 -- --------------------------------------------------------
 
@@ -1679,6 +1718,15 @@ CREATE TABLE `zkts` (
   `longitude_break_out` decimal(11,8) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+--
+-- Dumping data for table `zkts`
+--
+
+INSERT INTO `zkts` (`id`, `numid`, `name`, `absent`, `in`, `out`, `break_in`, `break_out`, `date`, `created_at`, `updated_at`, `latitude_in`, `longitude_in`, `latitude_out`, `longitude_out`, `latitude_break_in`, `longitude_break_in`, `latitude_break_out`, `longitude_break_out`) VALUES
+(499, 1, 'gamal', 'حاضر', '19:07:00', '19:15:05', NULL, NULL, '2026-10-16', '2026-10-16 17:14:50', '2026-10-16 18:14:06', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+(500, 1, 'gamal', 'حاضر', '15:11:29', '15:11:35', NULL, NULL, '2026-10-08', '2026-10-16 18:14:06', '2026-10-16 18:14:06', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+(501, 1, 'gamal', 'حاضر', '20:10:57', '20:12:58', NULL, NULL, '2026-10-15', '2026-10-16 18:14:06', '2026-10-16 18:14:06', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL);
+
 -- --------------------------------------------------------
 
 --
@@ -1704,7 +1752,96 @@ INSERT INTO `zkt_commands` (`id`, `sn`, `command`, `executed`, `created_at`, `up
 (8, 'A6F5224260946', 'DATA USER PIN=1	Name=wwww	Pri=0', 1, '2026-08-10 01:16:25', '2026-08-10 01:16:33'),
 (9, 'A6F5224260946', 'DATA USER PIN=1	Name=wwww	Pri=0', 1, '2026-08-10 01:17:13', '2026-08-10 01:17:18'),
 (10, 'A6F5224260946', 'DATA DELETE userinfo PIN=1', 1, '2026-08-10 01:17:24', '2026-08-10 01:17:28'),
-(11, 'A6F5224260946', 'DATA USER PIN=1	Name=eeee	Pri=0', 1, '2026-08-10 01:18:28', '2026-08-10 01:18:41');
+(11, 'A6F5224260946', 'DATA USER PIN=1	Name=eeee	Pri=0', 1, '2026-08-10 01:18:28', '2026-08-10 01:18:41'),
+(12, 'A6F5224260946', 'DATA USER PIN=1	Name=ahmed	Pri=0', 0, '2026-10-16 15:52:02', '2026-10-16 15:52:02'),
+(13, 'A6F5224260946', 'DATA DELETE userinfo PIN=1', 0, '2026-10-16 15:59:14', '2026-10-16 15:59:14'),
+(14, 'A6F5224260946', 'DATA USER PIN=1	Name=ahmed	Pri=0', 0, '2026-10-16 16:34:53', '2026-10-16 16:34:53'),
+(15, 'A6F5224260946', 'DATA DELETE userinfo PIN=1', 0, '2026-10-16 16:35:34', '2026-10-16 16:35:34'),
+(16, 'A6F5224260946', 'DATA DELETE userinfo PIN=1', 0, '2026-10-16 16:39:35', '2026-10-16 16:39:35'),
+(17, 'A6F5224260946', 'DATA USER PIN=1	Name=gamal	Pri=0', 0, '2026-10-16 17:05:00', '2026-10-16 17:05:00'),
+(18, 'A6F5224260946', 'DATA USER PIN=1	Name=gamal	Pri=0', 0, '2026-10-16 17:10:59', '2026-10-16 17:10:59');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `zkt_deleted_users`
+--
+
+CREATE TABLE `zkt_deleted_users` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `num` varchar(255) NOT NULL,
+  `name` varchar(255) DEFAULT NULL,
+  `device_key` varchar(255) DEFAULT NULL,
+  `executed` tinyint(1) NOT NULL DEFAULT 0,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `zkt_deleted_users`
+--
+
+INSERT INTO `zkt_deleted_users` (`id`, `num`, `name`, `device_key`, `executed`, `created_at`, `updated_at`) VALUES
+(3, '1', 'katry', NULL, 1, '2026-10-16 16:39:35', '2026-10-16 16:40:29');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `zkt_device_deletions`
+--
+
+CREATE TABLE `zkt_device_deletions` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `device_key` varchar(191) NOT NULL,
+  `emp_num` varchar(191) NOT NULL,
+  `deleted_at` timestamp NULL DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `zkt_device_deletions`
+--
+
+INSERT INTO `zkt_device_deletions` (`id`, `device_key`, `emp_num`, `deleted_at`, `created_at`, `updated_at`) VALUES
+(1, 'default', '1', '2026-10-16 17:04:00', NULL, '2026-10-16 17:04:00'),
+(4, 'جهاز الفرع الرئيسي', '1', '2026-10-16 17:04:37', NULL, '2026-10-16 17:04:37');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `zkt_device_sync`
+--
+
+CREATE TABLE `zkt_device_sync` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `device_key` varchar(191) NOT NULL,
+  `emp_num` varchar(191) NOT NULL,
+  `synced_at` timestamp NULL DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `zkt_device_sync`
+--
+
+INSERT INTO `zkt_device_sync` (`id`, `device_key`, `emp_num`, `synced_at`, `created_at`, `updated_at`) VALUES
+(4, 'جهاز الفرع الرئيسي', '1', '2026-10-16 17:11:47', NULL, '2026-10-16 17:11:47');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `zkt_synced_device_users`
+--
+
+CREATE TABLE `zkt_synced_device_users` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `device_key` varchar(191) NOT NULL,
+  `num` varchar(50) NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Indexes for dumped tables
@@ -2109,6 +2246,35 @@ ALTER TABLE `zkt_commands`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Indexes for table `zkt_deleted_users`
+--
+ALTER TABLE `zkt_deleted_users`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `zkt_device_deletions`
+--
+ALTER TABLE `zkt_device_deletions`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `zkt_device_deletions_device_key_emp_num_unique` (`device_key`,`emp_num`);
+
+--
+-- Indexes for table `zkt_device_sync`
+--
+ALTER TABLE `zkt_device_sync`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `zkt_device_sync_device_key_emp_num_unique` (`device_key`,`emp_num`);
+
+--
+-- Indexes for table `zkt_synced_device_users`
+--
+ALTER TABLE `zkt_synced_device_users`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `zkt_synced_device_users_device_key_num_unique` (`device_key`,`num`),
+  ADD KEY `zkt_synced_device_users_device_key_index` (`device_key`),
+  ADD KEY `zkt_synced_device_users_num_index` (`num`);
+
+--
 -- AUTO_INCREMENT for dumped tables
 --
 
@@ -2152,7 +2318,7 @@ ALTER TABLE `countips`
 -- AUTO_INCREMENT for table `counts`
 --
 ALTER TABLE `counts`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
 
 --
 -- AUTO_INCREMENT for table `counts_emps`
@@ -2188,7 +2354,7 @@ ALTER TABLE `eids`
 -- AUTO_INCREMENT for table `employees`
 --
 ALTER TABLE `employees`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=26;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=33;
 
 --
 -- AUTO_INCREMENT for table `employee_allowed_locations`
@@ -2278,7 +2444,7 @@ ALTER TABLE `manager_section`
 -- AUTO_INCREMENT for table `migrations`
 --
 ALTER TABLE `migrations`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=66;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=70;
 
 --
 -- AUTO_INCREMENT for table `mikros`
@@ -2308,7 +2474,7 @@ ALTER TABLE `pleases`
 -- AUTO_INCREMENT for table `plzots`
 --
 ALTER TABLE `plzots`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3864;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3870;
 
 --
 -- AUTO_INCREMENT for table `pricing_plans`
@@ -2332,7 +2498,7 @@ ALTER TABLE `roles`
 -- AUTO_INCREMENT for table `salves`
 --
 ALTER TABLE `salves`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=299;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=300;
 
 --
 -- AUTO_INCREMENT for table `sections`
@@ -2386,13 +2552,37 @@ ALTER TABLE `vacations`
 -- AUTO_INCREMENT for table `zkts`
 --
 ALTER TABLE `zkts`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=497;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=502;
 
 --
 -- AUTO_INCREMENT for table `zkt_commands`
 --
 ALTER TABLE `zkt_commands`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
+
+--
+-- AUTO_INCREMENT for table `zkt_deleted_users`
+--
+ALTER TABLE `zkt_deleted_users`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+
+--
+-- AUTO_INCREMENT for table `zkt_device_deletions`
+--
+ALTER TABLE `zkt_device_deletions`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+
+--
+-- AUTO_INCREMENT for table `zkt_device_sync`
+--
+ALTER TABLE `zkt_device_sync`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+
+--
+-- AUTO_INCREMENT for table `zkt_synced_device_users`
+--
+ALTER TABLE `zkt_synced_device_users`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
 -- Constraints for dumped tables

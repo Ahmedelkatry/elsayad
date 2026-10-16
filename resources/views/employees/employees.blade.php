@@ -92,10 +92,10 @@
                     حذف المحدد
                 </button>
             @endcan
-            <button type="button" onclick="openBranchesModal()" class="flex items-center gap-2 px-5 py-2.5 bg-blue-500 text-white rounded-xl text-xs font-bold hover:bg-blue-400 shadow-lg shadow-blue-500/10 transition-all active:scale-95">
+            {{-- <button type="button" onclick="openBranchesModal()" class="flex items-center gap-2 px-5 py-2.5 bg-blue-500 text-white rounded-xl text-xs font-bold hover:bg-blue-400 shadow-lg shadow-blue-500/10 transition-all active:scale-95">
                 <i data-lucide="map-pin" class="w-4 h-4"></i>
                 إدارة الفروع والمواقع
-            </button>
+            </button> --}}
         </div>
     </div>
 
@@ -128,7 +128,7 @@
 @section('content')
 
     <!-- Live Locations Responses -->
-    <div class="bg-white dark:bg-[#181818] border border-gray-100 dark:border-white/5 rounded-[2rem] p-6 shadow-sm mb-6">
+    {{-- <div class="bg-white dark:bg-[#181818] border border-gray-100 dark:border-white/5 rounded-[2rem] p-6 shadow-sm mb-6">
         <div class="flex justify-between items-center mb-4">
             <h4 class="text-sm font-bold text-gray-900 dark:text-white flex items-center gap-2">
                 <i data-lucide="map-pin" class="w-5 h-5 text-blue-500"></i> آخر ردود تحديد الموقع (اللحظي)
@@ -151,7 +151,7 @@
                 </tbody>
             </table>
         </div>
-    </div>
+    </div> --}}
 
     <!-- Employees Table -->
     <div class="bg-white dark:bg-[#181818] border border-gray-100 dark:border-white/5 rounded-[2rem] p-6 shadow-sm">

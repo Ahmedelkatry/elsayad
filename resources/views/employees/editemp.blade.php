@@ -166,10 +166,10 @@
                         <label class="block text-[11px] uppercase tracking-widest font-bold text-gray-500 mb-2">العمر</label>
                         <input type="number" name="age" value="{{ $emp->age }}" class="w-full bg-gray-50 dark:bg-[#111] border border-gray-200 dark:border-white/10 text-gray-900 dark:text-white px-4 py-3 rounded-xl outline-none focus:border-sky-500/50 text-xs transition-colors">
                     </div>
-                    <div>
+                    {{-- <div>
                         <label class="block text-[11px] uppercase tracking-widest font-bold text-gray-500 mb-2">الموبايل</label>
                         <input type="text" name="mobile" value="{{ $emp->mobile }}" class="w-full bg-gray-50 dark:bg-[#111] border border-gray-200 dark:border-white/10 text-gray-900 dark:text-white px-4 py-3 rounded-xl outline-none focus:border-sky-500/50 text-xs transition-colors">
-                    </div>
+                    </div> --}}
                     <div>
                         <label class="block text-[11px] uppercase tracking-widest font-bold text-gray-500 mb-2">القسم</label>
                         <select name="section_id" required class="w-full bg-gray-50 dark:bg-[#111] border border-gray-200 dark:border-white/10 text-gray-900 dark:text-white px-4 py-3 rounded-xl outline-none focus:border-sky-500/50 text-xs transition-colors">
@@ -307,7 +307,7 @@
             </div>
 
             <!-- بيانات الدخول (الحساب برقم التليفون) -->
-            <div class="mb-8">
+            {{-- <div class="mb-8">
                 <h4 class="text-sm font-bold text-sky-600 dark:text-sky-500 uppercase tracking-wider border-b border-gray-100 dark:border-white/5 pb-3 mb-4 flex items-center gap-2">
                     <i data-lucide="key" class="w-4 h-4"></i> حساب الدخول للنظام برقم الهاتف (اتركه فارغاً للتجاهل)
                 </h4>
@@ -331,7 +331,7 @@
                         </a>
                     </div>
                 @endif
-            </div>
+            </div> --}}
 
             <div class="flex justify-end border-t border-gray-100 dark:border-white/5 pt-6 mt-6">
                 <button type="submit" class="px-8 py-3 bg-sky-500 text-white hover:bg-sky-400 rounded-xl text-sm font-bold shadow-lg shadow-sky-500/20 transition-all active:scale-95 flex items-center gap-2">

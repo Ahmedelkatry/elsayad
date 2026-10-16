@@ -51,7 +51,7 @@ class IpzktController extends Controller
             'name'            => 'required',
             'start'           => 'required',
             'connection_type' => 'required|in:ip,sn',
-            'ip'              => 'required_if:connection_type,ip|nullable|ip',
+            'ip'              => 'required_if:connection_type,ip|nullable|string|max:50',
             'sn'              => 'required_if:connection_type,sn|nullable|string|max:50',
         ]);
 
@@ -86,13 +86,13 @@ class IpzktController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, ipzkt $zkt_name)
+    public function update(Request $request, $id)
     {
         $request->validate([
             'name'            => 'required',
             'start'           => 'required',
             'connection_type' => 'required|in:ip,sn',
-            'ip'              => 'required_if:connection_type,ip|nullable|ip',
+            'ip'              => 'required_if:connection_type,ip|nullable|string|max:50',
             'sn'              => 'required_if:connection_type,sn|nullable|string|max:50',
         ]);
 
@@ -104,16 +104,22 @@ class IpzktController extends Controller
             // $data['ip'] = null;
         }
 
-        ipzkt::find($zkt_name->id)->update($data);
+        $device = ipzkt::findOrFail($id);
+        $device->update($data);
+
+        session()->flash('edit', 'تم تعديل جهاز البصمة بنجاح');
         return back();
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(ipzkt $zkt_name)
+    public function destroy($id)
     {
-        $zkt_name->delete();
+        $device = ipzkt::findOrFail($id);
+        $device->delete();
+
+        session()->flash('delete', 'تم حذف جهاز البصمة بنجاح');
         return back();
     }
 

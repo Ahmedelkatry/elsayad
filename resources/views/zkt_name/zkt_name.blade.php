@@ -53,12 +53,12 @@
         </div>
         
         <div class="flex flex-wrap items-center gap-3">
-            @can('اضافه قسم')
-                <button onclick="showPixelModal('add-zkt-modal')" class="flex items-center gap-2 px-5 py-2.5 bg-sky-500 text-white rounded-xl text-xs font-bold hover:bg-sky-400 shadow-lg shadow-sky-500/20 transition-all active:scale-95">
+            @if(auth()->check() && (auth()->user()->can('اضافه قسم') || auth()->user()->can('IP-الاتصال') || auth()->user()->hasRole('owner')))
+                <button type="button" onclick="showPixelModal('add-zkt-modal')" class="flex items-center gap-2 px-5 py-2.5 bg-sky-500 text-white rounded-xl text-xs font-bold hover:bg-sky-400 shadow-lg shadow-sky-500/20 transition-all active:scale-95">
                     <i data-lucide="plus" class="w-4 h-4 text-white"></i>
                     إضافة جهاز بصمة
                 </button>
-            @endcan
+            @endif
         </div>
     </div>
 
@@ -130,118 +130,121 @@
                             </td>
                             <td class="py-3 px-4 text-sm">
                                 <div class="flex items-center gap-2">
-                                    @can('تعديل قسم')
-                                        <button onclick="showPixelModal('update-zkt-modal-{{ $sec->id }}')" class="p-2 bg-green-100 dark:bg-green-500/10 text-green-600 dark:text-green-500 hover:bg-green-200 dark:hover:bg-green-500/20 rounded-lg transition-colors">
+                                    @if(auth()->check() && (auth()->user()->can('تعديل قسم') || auth()->user()->can('IP-الاتصال') || auth()->user()->hasRole('owner')))
+                                        <button type="button" onclick="showPixelModal('update-zkt-modal-{{ $sec->id }}')" class="p-2 bg-green-100 dark:bg-green-500/10 text-green-600 dark:text-green-500 hover:bg-green-200 dark:hover:bg-green-500/20 rounded-lg transition-colors" title="تعديل">
                                             <i data-lucide="edit" class="w-4 h-4"></i>
                                         </button>
-                                    @endcan
-                                    @can('حذف قسم')
-                                        <button onclick="showPixelModal('delete-zkt-modal-{{ $sec->id }}')" class="p-2 bg-red-100 dark:bg-red-500/10 text-red-600 dark:text-red-500 hover:bg-red-200 dark:hover:bg-red-500/20 rounded-lg transition-colors">
+                                    @endif
+                                    @if(auth()->check() && (auth()->user()->can('حذف قسم') || auth()->user()->can('IP-الاتصال') || auth()->user()->hasRole('owner')))
+                                        <button type="button" onclick="showPixelModal('delete-zkt-modal-{{ $sec->id }}')" class="p-2 bg-red-100 dark:bg-red-500/10 text-red-600 dark:text-red-500 hover:bg-red-200 dark:hover:bg-red-500/20 rounded-lg transition-colors" title="حذف">
                                             <i data-lucide="trash-2" class="w-4 h-4"></i>
                                         </button>
-                                    @endcan
+                                    @endif
                                 </div>
                             </td>
                         </tr>
-
-                        <!-- Update Modal -->
-                        <div id="update-zkt-modal-{{ $sec->id }}" class="pixel-modal fixed inset-0 z-[100] flex items-center justify-center p-4 opacity-0 pointer-events-none transition-opacity duration-300">
-                            <div class="modal-backdrop absolute inset-0 bg-black/60 backdrop-blur-sm"></div>
-                            <div class="modal-content relative bg-white dark:bg-[#181818] w-full max-w-md rounded-[2rem] shadow-2xl border border-gray-200 dark:border-white/10 transform scale-95 transition-transform duration-300 overflow-hidden flex flex-col">
-                                <div class="px-6 py-4 border-b border-gray-100 dark:border-white/5 flex justify-between items-center bg-gray-50 dark:bg-transparent">
-                                    <h3 class="text-sm font-bold text-gray-900 dark:text-white flex items-center gap-2">
-                                        <i data-lucide="edit" class="w-5 h-5 text-green-500"></i> تعديل جهاز البصمة
-                                    </h3>
-                                    <button type="button" onclick="hidePixelModal('update-zkt-modal-{{ $sec->id }}')" class="text-gray-400 hover:text-red-500 transition-colors outline-none">
-                                        <i data-lucide="x" class="w-5 h-5"></i>
-                                    </button>
-                                </div>
-                                <form action="{{ route('zkt_name.update', $sec->id) }}" method="post">
-                                    {{ method_field('patch') }}
-                                    {{ csrf_field() }}
-                                    <div class="p-6 space-y-4">
-                                        <div>
-                                            <label class="block text-[11px] uppercase tracking-widest font-bold text-gray-500 mb-2">اسم الجهاز</label>
-                                            <input type="text" name="name" value="{{ $sec->name }}" required class="w-full bg-gray-50 dark:bg-[#111] border border-gray-200 dark:border-white/10 text-gray-900 dark:text-white px-4 py-3 rounded-xl outline-none focus:border-sky-500/50 text-xs transition-colors">
-                                        </div>
-                                        
-                                        {{-- طريقة الاتصال للتعديل --}}
-                                        <div>
-                                            <label class="block text-[11px] uppercase tracking-widest font-bold text-gray-500 mb-2">طريقة الاتصال</label>
-                                            <div class="grid grid-cols-2 gap-3 bg-gray-50 dark:bg-[#111] p-1 rounded-xl border border-gray-200/50 dark:border-white/5">
-                                                <label class="flex items-center justify-center gap-2 py-2 px-3 rounded-lg cursor-pointer text-xs font-bold text-gray-700 dark:text-gray-300 transition-all select-none has-[:checked]:bg-sky-500 has-[:checked]:text-white">
-                                                    <input type="radio" name="connection_type" value="ip" {{ !$sec->sn ? 'checked' : '' }} class="sr-only" onchange="toggleConnectionType('edit-{{ $sec->id }}', 'ip')">
-                                                    IP الاتصال بالشبكة
-                                                </label>
-                                                <label class="flex items-center justify-center gap-2 py-2 px-3 rounded-lg cursor-pointer text-xs font-bold text-gray-700 dark:text-gray-300 transition-all select-none has-[:checked]:bg-sky-500 has-[:checked]:text-white">
-                                                    <input type="radio" name="connection_type" value="sn" {{ $sec->sn ? 'checked' : '' }} class="sr-only" onchange="toggleConnectionType('edit-{{ $sec->id }}', 'sn')">
-                                                    SN (ADMS) سيريال
-                                                </label>
-                                            </div>
-                                        </div>
-
-                                        <div id="edit-{{ $sec->id }}-ip-wrapper" class="{{ $sec->sn ? 'hidden' : '' }}">
-                                            <label class="block text-[11px] uppercase tracking-widest font-bold text-gray-500 mb-2">IP الجهاز</label>
-                                            <input type="text" name="ip" id="edit-{{ $sec->id }}-ip-input" value="{{ $sec->ip }}" {{ !$sec->sn ? 'required' : '' }} class="w-full bg-gray-50 dark:bg-[#111] border border-gray-200 dark:border-white/10 text-gray-900 dark:text-white px-4 py-3 rounded-xl outline-none focus:border-sky-500/50 text-xs transition-colors">
-                                        </div>
-                                        <div id="edit-{{ $sec->id }}-sn-wrapper" class="{{ !$sec->sn ? 'hidden' : '' }}">
-                                            <label class="block text-[11px] uppercase tracking-widest font-bold text-gray-500 mb-2">SN الجهاز <span class="text-gray-400 normal-case font-normal">(Serial Number - للـ ADMS)</span></label>
-                                            <input type="text" name="sn" id="edit-{{ $sec->id }}-sn-input" value="{{ $sec->sn }}" {{ $sec->sn ? 'required' : '' }} placeholder="مثال: ACD3901403010012" class="w-full bg-gray-50 dark:bg-[#111] border border-gray-200 dark:border-white/10 text-gray-900 dark:text-white px-4 py-3 rounded-xl outline-none focus:border-blue-500/50 text-xs transition-colors font-mono">
-                                        </div>
-
-                                        <div class="grid grid-cols-2 gap-4">
-                                            <div>
-                                                <label class="block text-[11px] uppercase tracking-widest font-bold text-gray-500 mb-2">بداية البصمة</label>
-                                                <input type="number" name="start" value="{{ $sec->start }}" required class="w-full bg-gray-50 dark:bg-[#111] border border-gray-200 dark:border-white/10 text-gray-900 dark:text-white px-4 py-3 rounded-xl outline-none focus:border-sky-500/50 text-xs transition-colors">
-                                            </div>
-                                            <div>
-                                                <label class="block text-[11px] uppercase tracking-widest font-bold text-gray-500 mb-2">نهاية البصمة</label>
-                                                <input type="number" name="end" value="{{ $sec->end }}" required class="w-full bg-gray-50 dark:bg-[#111] border border-gray-200 dark:border-white/10 text-gray-900 dark:text-white px-4 py-3 rounded-xl outline-none focus:border-sky-500/50 text-xs transition-colors">
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="px-6 py-4 border-t border-gray-100 dark:border-white/5 bg-gray-50 dark:bg-transparent flex justify-end gap-3">
-                                        <button type="button" onclick="hidePixelModal('update-zkt-modal-{{ $sec->id }}')" class="px-5 py-2.5 bg-gray-200 dark:bg-white/5 text-gray-700 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-white/10 rounded-xl text-xs font-bold transition-all">إلغاء</button>
-                                        <button type="submit" class="px-5 py-2.5 bg-sky-500 text-white hover:bg-sky-400 rounded-xl text-xs font-bold shadow-lg shadow-sky-500/20 transition-all active:scale-95">حفظ التعديلات</button>
-                                    </div>
-                                </form>
-                            </div>
-                        </div>
-
-                        <!-- Delete Modal -->
-                        <div id="delete-zkt-modal-{{ $sec->id }}" class="pixel-modal fixed inset-0 z-[100] flex items-center justify-center p-4 opacity-0 pointer-events-none transition-opacity duration-300">
-                            <div class="modal-backdrop absolute inset-0 bg-black/60 backdrop-blur-sm"></div>
-                            <div class="modal-content relative bg-white dark:bg-[#181818] w-full max-w-md rounded-[2rem] shadow-2xl border border-gray-200 dark:border-white/10 transform scale-95 transition-transform duration-300 overflow-hidden flex flex-col">
-                                <div class="px-6 py-4 border-b border-gray-100 dark:border-white/5 flex justify-between items-center bg-gray-50 dark:bg-transparent text-right">
-                                    <h3 class="text-sm font-bold text-red-500 flex items-center gap-2">
-                                        <i data-lucide="alert-triangle" class="w-5 h-5"></i> تأكيد الحذف
-                                    </h3>
-                                    <button type="button" onclick="hidePixelModal('delete-zkt-modal-{{ $sec->id }}')" class="text-gray-400 hover:text-red-500 transition-colors outline-none">
-                                        <i data-lucide="x" class="w-5 h-5"></i>
-                                    </button>
-                                </div>
-                                <form action="{{ route('zkt_name.destroy', $sec->id) }}" method="post">
-                                    {{ method_field('delete') }}
-                                    {{ csrf_field() }}
-                                    <div class="p-6 space-y-4 text-right">
-                                        <p class="text-sm text-gray-900 dark:text-white font-bold">هل أنت متأكد من حذف هذا الجهاز؟</p>
-                                        <div class="bg-gray-50 dark:bg-[#111] p-4 rounded-xl border border-gray-100 dark:border-white/5 text-center">
-                                            <span class="text-lg text-gray-900 dark:text-white font-bold">{{ $sec->name }}</span>
-                                            <p class="text-xs text-gray-500 mt-1">{{ $sec->ip }}</p>
-                                        </div>
-                                    </div>
-                                    <div class="px-6 py-4 border-t border-gray-100 dark:border-white/5 bg-gray-50 dark:bg-transparent flex justify-end gap-3">
-                                        <button type="button" onclick="hidePixelModal('delete-zkt-modal-{{ $sec->id }}')" class="px-5 py-2.5 bg-gray-200 dark:bg-white/5 text-gray-700 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-white/10 rounded-xl text-xs font-bold transition-all">إلغاء</button>
-                                        <button type="submit" class="px-5 py-2.5 bg-red-500 text-white hover:bg-red-600 rounded-xl text-xs font-bold shadow-lg shadow-red-500/10 transition-all active:scale-95">تأكيد الحذف</button>
-                                    </div>
-                                </form>
-                            </div>
-                        </div>
                     @endforeach
                 </tbody>
             </table>
         </div>
     </div>
+
+    <!-- Modals for Each Device (Update & Delete) -->
+    @foreach ($zkts as $sec)
+        <!-- Update Modal -->
+        <div id="update-zkt-modal-{{ $sec->id }}" class="pixel-modal fixed inset-0 z-[100] flex items-center justify-center p-4 opacity-0 pointer-events-none transition-opacity duration-300">
+            <div class="modal-backdrop absolute inset-0 bg-black/60 backdrop-blur-sm"></div>
+            <div class="modal-content relative bg-white dark:bg-[#181818] w-full max-w-md rounded-[2rem] shadow-2xl border border-gray-200 dark:border-white/10 transform scale-95 transition-transform duration-300 overflow-hidden flex flex-col">
+                <div class="px-6 py-4 border-b border-gray-100 dark:border-white/5 flex justify-between items-center bg-gray-50 dark:bg-transparent">
+                    <h3 class="text-sm font-bold text-gray-900 dark:text-white flex items-center gap-2">
+                        <i data-lucide="edit" class="w-5 h-5 text-green-500"></i> تعديل جهاز البصمة
+                    </h3>
+                    <button type="button" onclick="hidePixelModal('update-zkt-modal-{{ $sec->id }}')" class="text-gray-400 hover:text-red-500 transition-colors outline-none">
+                        <i data-lucide="x" class="w-5 h-5"></i>
+                    </button>
+                </div>
+                <form action="{{ route('zkt_name.update', $sec->id) }}" method="post">
+                    {{ method_field('patch') }}
+                    {{ csrf_field() }}
+                    <div class="p-6 space-y-4">
+                        <div>
+                            <label class="block text-[11px] uppercase tracking-widest font-bold text-gray-500 mb-2">اسم الجهاز</label>
+                            <input type="text" name="name" value="{{ $sec->name }}" required class="w-full bg-gray-50 dark:bg-[#111] border border-gray-200 dark:border-white/10 text-gray-900 dark:text-white px-4 py-3 rounded-xl outline-none focus:border-sky-500/50 text-xs transition-colors">
+                        </div>
+                        
+                        {{-- طريقة الاتصال للتعديل --}}
+                        <div>
+                            <label class="block text-[11px] uppercase tracking-widest font-bold text-gray-500 mb-2">طريقة الاتصال</label>
+                            <div class="grid grid-cols-2 gap-3 bg-gray-50 dark:bg-[#111] p-1 rounded-xl border border-gray-200/50 dark:border-white/5">
+                                <label class="flex items-center justify-center gap-2 py-2 px-3 rounded-lg cursor-pointer text-xs font-bold text-gray-700 dark:text-gray-300 transition-all select-none has-[:checked]:bg-sky-500 has-[:checked]:text-white">
+                                    <input type="radio" name="connection_type" value="ip" {{ !$sec->sn ? 'checked' : '' }} class="sr-only" onchange="toggleConnectionType('edit-{{ $sec->id }}', 'ip')">
+                                    IP الاتصال بالشبكة
+                                </label>
+                                <label class="flex items-center justify-center gap-2 py-2 px-3 rounded-lg cursor-pointer text-xs font-bold text-gray-700 dark:text-gray-300 transition-all select-none has-[:checked]:bg-sky-500 has-[:checked]:text-white">
+                                    <input type="radio" name="connection_type" value="sn" {{ $sec->sn ? 'checked' : '' }} class="sr-only" onchange="toggleConnectionType('edit-{{ $sec->id }}', 'sn')">
+                                    SN (ADMS) سيريال
+                                </label>
+                            </div>
+                        </div>
+
+                        <div id="edit-{{ $sec->id }}-ip-wrapper" class="{{ $sec->sn ? 'hidden' : '' }}">
+                            <label class="block text-[11px] uppercase tracking-widest font-bold text-gray-500 mb-2">IP الجهاز</label>
+                            <input type="text" name="ip" id="edit-{{ $sec->id }}-ip-input" value="{{ $sec->ip }}" {{ !$sec->sn ? 'required' : '' }} class="w-full bg-gray-50 dark:bg-[#111] border border-gray-200 dark:border-white/10 text-gray-900 dark:text-white px-4 py-3 rounded-xl outline-none focus:border-sky-500/50 text-xs transition-colors">
+                        </div>
+                        <div id="edit-{{ $sec->id }}-sn-wrapper" class="{{ !$sec->sn ? 'hidden' : '' }}">
+                            <label class="block text-[11px] uppercase tracking-widest font-bold text-gray-500 mb-2">SN الجهاز <span class="text-gray-400 normal-case font-normal">(Serial Number - للـ ADMS)</span></label>
+                            <input type="text" name="sn" id="edit-{{ $sec->id }}-sn-input" value="{{ $sec->sn }}" {{ $sec->sn ? 'required' : '' }} placeholder="مثال: ACD3901403010012" class="w-full bg-gray-50 dark:bg-[#111] border border-gray-200 dark:border-white/10 text-gray-900 dark:text-white px-4 py-3 rounded-xl outline-none focus:border-blue-500/50 text-xs transition-colors font-mono">
+                        </div>
+
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-[11px] uppercase tracking-widest font-bold text-gray-500 mb-2">بداية البصمة</label>
+                                <input type="number" name="start" value="{{ $sec->start }}" required class="w-full bg-gray-50 dark:bg-[#111] border border-gray-200 dark:border-white/10 text-gray-900 dark:text-white px-4 py-3 rounded-xl outline-none focus:border-sky-500/50 text-xs transition-colors">
+                            </div>
+                            <div>
+                                <label class="block text-[11px] uppercase tracking-widest font-bold text-gray-500 mb-2">نهاية البصمة</label>
+                                <input type="number" name="end" value="{{ $sec->end }}" class="w-full bg-gray-50 dark:bg-[#111] border border-gray-200 dark:border-white/10 text-gray-900 dark:text-white px-4 py-3 rounded-xl outline-none focus:border-sky-500/50 text-xs transition-colors">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="px-6 py-4 border-t border-gray-100 dark:border-white/5 bg-gray-50 dark:bg-transparent flex justify-end gap-3">
+                        <button type="button" onclick="hidePixelModal('update-zkt-modal-{{ $sec->id }}')" class="px-5 py-2.5 bg-gray-200 dark:bg-white/5 text-gray-700 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-white/10 rounded-xl text-xs font-bold transition-all">إلغاء</button>
+                        <button type="submit" class="px-5 py-2.5 bg-sky-500 text-white hover:bg-sky-400 rounded-xl text-xs font-bold shadow-lg shadow-sky-500/20 transition-all active:scale-95">حفظ التعديلات</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Delete Modal -->
+        <div id="delete-zkt-modal-{{ $sec->id }}" class="pixel-modal fixed inset-0 z-[100] flex items-center justify-center p-4 opacity-0 pointer-events-none transition-opacity duration-300">
+            <div class="modal-backdrop absolute inset-0 bg-black/60 backdrop-blur-sm"></div>
+            <div class="modal-content relative bg-white dark:bg-[#181818] w-full max-w-md rounded-[2rem] shadow-2xl border border-gray-200 dark:border-white/10 transform scale-95 transition-transform duration-300 overflow-hidden flex flex-col">
+                <div class="px-6 py-4 border-b border-gray-100 dark:border-white/5 flex justify-between items-center bg-gray-50 dark:bg-transparent text-right">
+                    <h3 class="text-sm font-bold text-red-500 flex items-center gap-2">
+                        <i data-lucide="alert-triangle" class="w-5 h-5"></i> تأكيد الحذف
+                    </h3>
+                    <button type="button" onclick="hidePixelModal('delete-zkt-modal-{{ $sec->id }}')" class="text-gray-400 hover:text-red-500 transition-colors outline-none">
+                        <i data-lucide="x" class="w-5 h-5"></i>
+                    </button>
+                </div>
+                <form action="{{ route('zkt_name.destroy', $sec->id) }}" method="post">
+                    {{ method_field('delete') }}
+                    {{ csrf_field() }}
+                    <div class="p-6 space-y-4 text-right">
+                        <p class="text-sm text-gray-900 dark:text-white font-bold">هل أنت متأكد من حذف هذا الجهاز؟</p>
+                        <div class="bg-gray-50 dark:bg-[#111] p-4 rounded-xl border border-gray-100 dark:border-white/5 text-center">
+                            <span class="text-lg text-gray-900 dark:text-white font-bold">{{ $sec->name }}</span>
+                            <p class="text-xs text-gray-500 mt-1 font-mono">{{ $sec->ip ?? $sec->sn }}</p>
+                        </div>
+                    </div>
+                    <div class="px-6 py-4 border-t border-gray-100 dark:border-white/5 bg-gray-50 dark:bg-transparent flex justify-end gap-3">
+                        <button type="button" onclick="hidePixelModal('delete-zkt-modal-{{ $sec->id }}')" class="px-5 py-2.5 bg-gray-200 dark:bg-white/5 text-gray-700 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-white/10 rounded-xl text-xs font-bold transition-all">إلغاء</button>
+                        <button type="submit" class="px-5 py-2.5 bg-red-500 text-white hover:bg-red-600 rounded-xl text-xs font-bold shadow-lg shadow-red-500/10 transition-all active:scale-95">تأكيد الحذف</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    @endforeach
 
     <!-- Add ZKT Modal -->
     <div id="add-zkt-modal" class="pixel-modal fixed inset-0 z-[100] flex items-center justify-center p-4 opacity-0 pointer-events-none transition-opacity duration-300">
@@ -316,6 +319,33 @@
     <script src="{{ URL::asset('assets/plugins/datatable/js/dataTables.bootstrap4.js') }}"></script>
     
     <script>
+        // Modal Handlers
+        function showPixelModal(id) {
+            const modal = document.getElementById(id);
+            if(modal) {
+                modal.classList.remove('opacity-0', 'pointer-events-none');
+                const content = modal.querySelector('.modal-content');
+                if(content) content.classList.remove('scale-95');
+                if(typeof lucide !== 'undefined') lucide.createIcons();
+            }
+        }
+        
+        function hidePixelModal(id) {
+            const modal = document.getElementById(id);
+            if(modal) {
+                modal.classList.add('opacity-0', 'pointer-events-none');
+                const content = modal.querySelector('.modal-content');
+                if(content) content.classList.add('scale-95');
+            }
+        }
+
+        $(document).on('click', '.modal-backdrop', function() {
+            const modal = $(this).closest('.pixel-modal');
+            if(modal.length) {
+                hidePixelModal(modal.attr('id'));
+            }
+        });
+
         // Store the base check status URL (using route helper for reliability)
         const checkStatusBaseUrl = "{{ route('check_zkt_status', ['ip' => '___IP___']) }}";
 
