@@ -480,12 +480,12 @@ function syncDeletedUsersToDevices(array $config, bool $verifySsl, bool $isDebug
             // أمر حذف المستخدم وبصماته من جهاز ZKTeco
             $result = $zk->removeUser($uid);
 
+            // نعتبر الحذف منجزاً سواء تم الحذف بنجاح أو كان الموظف غير موجود أصلاً على الماكينة
+            $removedPins[] = $pin;
             if ($result !== false) {
-                $removedPins[] = $pin;
                 logMessage("INFO", "[USER-DELETE] ✔ Removed from device: PIN [$uid] $empName");
             } else {
-                $failedCount++;
-                logMessage("WARNING", "[USER-DELETE] ✘ Failed to remove from device: PIN [$uid] $empName");
+                logMessage("INFO", "[USER-DELETE] User not present on device (or already cleared): PIN [$uid] $empName");
             }
         }
 

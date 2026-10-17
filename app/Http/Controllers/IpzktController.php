@@ -1231,25 +1231,25 @@ private function _processAdmsAttlog(string $rawBody, ipzkt $device): void
         $deviceName = $request->input('device_name');
         $deviceKey  = $deviceName ?: ($deviceIp ?: 'default');
 
+        $deviceKeys = array_unique(array_filter([
+            $deviceKey,
+            $deviceName,
+            $deviceIp,
+        ]));
+
         $query = \App\Models\ZktDeletedUser::query();
 
         // تصفية الأجهزة: إما أمر عام لكل الأجهزة (null) أو مخصص لهذا الجهاز
-        if ($deviceKey) {
-            $query->where(function ($q) use ($deviceKey, $deviceName, $deviceIp) {
+        if (!empty($deviceKeys)) {
+            $query->where(function ($q) use ($deviceKeys) {
                 $q->whereNull('device_key')
                   ->orWhere('device_key', '')
-                  ->orWhere('device_key', $deviceKey);
-                if ($deviceName) {
-                    $q->orWhere('device_key', $deviceName);
-                }
-                if ($deviceIp) {
-                    $q->orWhere('device_key', $deviceIp);
-                }
+                  ->orWhereIn('device_key', $deviceKeys);
             });
 
             // استبعاد الموظفين الذين تم حذفهم وتأكيدهم من هذا الجهاز مسبقاً
             $alreadyDeleted = DB::table('zkt_device_deletions')
-                ->where('device_key', $deviceKey)
+                ->whereIn('device_key', $deviceKeys)
                 ->pluck('emp_num')
                 ->toArray();
 
@@ -1258,7 +1258,13 @@ private function _processAdmsAttlog(string $rawBody, ipzkt $device): void
             }
         }
 
-        $deletedList = $query->orderBy('id', 'asc')->get(['id', 'num', 'name'])->map(function ($item) {
+        // استبعاد أي موظف نشط وموجود حالياً في جدول الموظفين (حتى لا يتم حذف موظف نشط)
+        $activeNums = employees::whereNotNull('num')->pluck('num')->toArray();
+        if (!empty($activeNums)) {
+            $query->whereNotIn('num', $activeNums);
+        }
+
+        $deletedList = $query->orderBy('id', 'asc')->get(['id', 'num', 'name'])->unique('num')->values()->map(function ($item) {
             return [
                 'id'   => $item->id,
                 'uid'  => (int) $item->num,
@@ -1285,16 +1291,24 @@ private function _processAdmsAttlog(string $rawBody, ipzkt $device): void
         $deviceName  = $request->input('device_name');
         $deviceKey   = $deviceName ?: ($deviceIp ?: 'default');
 
+        $deviceKeys = array_unique(array_filter([
+            $deviceKey,
+            $deviceName,
+            $deviceIp,
+        ]));
+
         if (empty($deletedPins) || !is_array($deletedPins)) {
             return response()->json(['status' => 'error', 'message' => 'No deleted_pins provided'], 422);
         }
 
-        // تسجيل إتمام الحذف لهذا الجهاز على حدة
+        // تسجيل إتمام الحذف لهذا الجهاز بكافة مفاتيحه (الاسم و IP)
         foreach ($deletedPins as $pin) {
-            DB::table('zkt_device_deletions')->updateOrInsert(
-                ['device_key' => $deviceKey, 'emp_num' => (string)$pin],
-                ['deleted_at' => now(), 'updated_at' => now()]
-            );
+            foreach ($deviceKeys as $k) {
+                DB::table('zkt_device_deletions')->updateOrInsert(
+                    ['device_key' => $k, 'emp_num' => (string)$pin],
+                    ['deleted_at' => now(), 'updated_at' => now()]
+                );
+            }
         }
 
         Log::info("ZK Deleted User Sync: Device [$deviceKey] confirmed deletion of " . count($deletedPins) . " users. pins=" . implode(',', $deletedPins));

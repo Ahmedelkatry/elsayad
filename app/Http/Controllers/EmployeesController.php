@@ -86,7 +86,10 @@ class EmployeesController extends Controller implements HasMiddleware
         }
         $employee = employees::create($data);
 
-        // Enqueue command for ADMS devices
+        // مسح أي أوامر حذف سابقة معلقة لنفس رقم البصمة لضمان عدم حذفه بالخطأ
+        \App\Models\ZktDeletedUser::where('num', $employee->num)->delete();
+        \Illuminate\Support\Facades\DB::table('zkt_device_deletions')->where('emp_num', $employee->num)->delete();
+        \Illuminate\Support\Facades\DB::table('zkt_device_sync')->where('emp_num', $employee->num)->delete();
         $admsDevices = \App\Models\ipzkt::whereNotNull('sn')->where('sn', '!=', '')->get();
         foreach ($admsDevices as $device) {
             $pin = $employee->num;
@@ -459,71 +462,76 @@ class EmployeesController extends Controller implements HasMiddleware
 
         $pin = $empToDelete->num ?? $request->idzkt;
         $name = $empToDelete->name;
+        $email = $empToDelete->email;
         $ipsList = $empToDelete->ipz ? array_filter(explode(',', $empToDelete->ipz)) : [];
 
-        // 1. تسجيل أمر الحذف في جدول zkt_deleted_users لمزامنة الوسيط (IP Mediator) في كافة الفروع
-        \App\Models\ZktDeletedUser::create([
-            'num'        => $pin,
-            'name'       => $name,
-            'device_key' => null, // لكل الأجهزة والفروع
-            'executed'   => 0,
-        ]);
-
-        // 2. إرسال أمر الحذف لجميع أجهزة ADMS (Cloud / SN)
-        $admsDevices = \App\Models\ipzkt::whereNotNull('sn')->where('sn', '!=', '')->get();
-        foreach ($admsDevices as $device) {
-            if (empty($ipsList) || in_array($device->sn, $ipsList) || in_array($device->ip, $ipsList)) {
-                \App\Models\ZktCommand::create([
-                    'sn'      => $device->sn,
-                    'command' => "DATA DELETE userinfo PIN={$pin}",
-                ]);
-            }
-        }
-
-        // 3. محاولة الحذف المباشر (Direct Socket IP) إن كان الجهاز متصلاً بالشبكة المحلية للسيرفر
-        foreach ($ipsList as $ipOrSn) {
-            if (empty($ipOrSn)) {
-                continue;
-            }
-
-            $device = \App\Models\ipzkt::where('ip', $ipOrSn)->orWhere('sn', $ipOrSn)->first();
-            // محاولة الاتصال المباشر فقط إن كان عنوان IP وليس مجرد SN
-            if ($ipOrSn && (!$device || $device->ip)) {
-                try {
-                    $zk = new ZKTeco($ipOrSn);
-                    if (@$zk->connect()) {
-                        @$zk->removeUser((int)$pin);
-                        @$zk->disconnect();
-
-                        // تحديث حالة الحذف كمنفذة لهذا الجهاز
-                        \App\Models\ZktDeletedUser::where('num', $pin)
-                            ->where(function($q) use ($ipOrSn) {
-                                $q->where('device_key', $ipOrSn)->orWhereNull('device_key');
-                            })->update(['executed' => 1]);
-                    }
-                } catch (\Throwable $e) {
-                    \Illuminate\Support\Facades\Log::warning("Direct ZKTeco removal failed for $ipOrSn, user $pin: " . $e->getMessage());
-                }
-            }
-        }
-
-        // 4. حذف سجلات البصمة والمزامنة للموظف
+        // 1. حذف الموظف فوراً من البرنامج وقاعدة البيانات وكافة السجلات المرتبطة به أولاً
         zkt::where('numid', $pin)->delete();
         nozkt::where('numid', $pin)->delete();
         \Illuminate\Support\Facades\DB::table('zkt_device_sync')->where('emp_num', $pin)->delete();
 
-        // 5. حذف حساب المستخدم المرتبط إن وجد
-        if ($empToDelete->email) {
-            $user = user::where('email', $empToDelete->email)->first();
+        if ($email) {
+            $user = user::where('email', $email)->first();
             if ($user) {
                 $user->delete();
             }
         }
 
-        // 6. حذف الموظف من قاعدة البيانات
+        // الحذف الفعلي والنهائي للموظف من البرنامج
         $empToDelete->delete();
 
-        return back()->with('delete', 'تم حذف الموظف بنجاح وجاري إزالته من ماكينة البصمة.');
+        // 2. بعد الحذف من البرنامج، إرسال أوامر المزامنة لحذف الموظف من ماكينات البصمة:
+        // أ) تسجيل أمر الحذف لوسيط الفروع (zk_mediator) لكافة الماكينات
+        if ($pin) {
+            \App\Models\ZktDeletedUser::create([
+                'num'        => $pin,
+                'name'       => $name,
+                'device_key' => null, // لكل الأجهزة والفروع
+                'executed'   => 0,
+            ]);
+        }
+
+        // ب) إرسال أمر الحذف لجميع أجهزة ADMS (Cloud / SN)
+        if ($pin) {
+            $admsDevices = \App\Models\ipzkt::whereNotNull('sn')->where('sn', '!=', '')->get();
+            foreach ($admsDevices as $device) {
+                if (empty($ipsList) || in_array($device->sn, $ipsList) || in_array($device->ip, $ipsList)) {
+                    \App\Models\ZktCommand::create([
+                        'sn'      => $device->sn,
+                        'command' => "DATA DELETE userinfo PIN={$pin}",
+                    ]);
+                }
+            }
+        }
+
+        // ج) محاولة حذف مباشرة وسريعة بالسوكت إن كانت الماكينة متصلة بنفس الشبكة المحلية
+        // مع فحص سوكت خفيف 0.5 ثانية فقط لتجنب أي تعليق أو بطء
+        if ($pin && !empty($ipsList)) {
+            foreach ($ipsList as $ipOrSn) {
+                if (filter_var($ipOrSn, FILTER_VALIDATE_IP)) {
+                    $sock = @fsockopen($ipOrSn, 4370, $errno, $errstr, 0.5);
+                    if ($sock) {
+                        fclose($sock);
+                        try {
+                            $zk = new ZKTeco($ipOrSn, 4370);
+                            if (@$zk->connect()) {
+                                @$zk->removeUser((int)$pin);
+                                @$zk->disconnect();
+
+                                \Illuminate\Support\Facades\DB::table('zkt_device_deletions')->updateOrInsert(
+                                    ['device_key' => $ipOrSn, 'emp_num' => (string)$pin],
+                                    ['deleted_at' => now(), 'updated_at' => now()]
+                                );
+                            }
+                        } catch (\Throwable $e) {
+                            \Illuminate\Support\Facades\Log::warning("Direct ZKTeco removal failed for $ipOrSn, user $pin: " . $e->getMessage());
+                        }
+                    }
+                }
+            }
+        }
+
+        return back()->with('delete', 'تم حذف الموظف من البرنامج بنجاح، وجاري مزامنة حذفه من أجهزة البصمة.');
     }
 
     public function delete_account($id)
