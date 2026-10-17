@@ -1230,6 +1230,7 @@ private function _processAdmsAttlog(string $rawBody, ipzkt $device): void
         $deviceIp   = $request->input('device_ip');
         $deviceName = $request->input('device_name');
         $deviceKey  = $deviceName ?: ($deviceIp ?: 'default');
+        $isForce    = $request->boolean('force', false) || $request->boolean('force_delete', false);
 
         $deviceKeys = array_unique(array_filter([
             $deviceKey,
@@ -1247,14 +1248,16 @@ private function _processAdmsAttlog(string $rawBody, ipzkt $device): void
                   ->orWhereIn('device_key', $deviceKeys);
             });
 
-            // استبعاد الموظفين الذين تم حذفهم وتأكيدهم من هذا الجهاز مسبقاً
-            $alreadyDeleted = DB::table('zkt_device_deletions')
-                ->whereIn('device_key', $deviceKeys)
-                ->pluck('emp_num')
-                ->toArray();
+            // استبعاد الموظفين الذين تم حذفهم وتأكيدهم من هذا الجهاز مسبقاً (إلا في حالة Force)
+            if (!$isForce) {
+                $alreadyDeleted = DB::table('zkt_device_deletions')
+                    ->whereIn('device_key', $deviceKeys)
+                    ->pluck('emp_num')
+                    ->toArray();
 
-            if (!empty($alreadyDeleted)) {
-                $query->whereNotIn('num', $alreadyDeleted);
+                if (!empty($alreadyDeleted)) {
+                    $query->whereNotIn('num', $alreadyDeleted);
+                }
             }
         }
 

@@ -454,7 +454,7 @@ class EmployeesController extends Controller implements HasMiddleware
     public function destroy(Request $request)
     {
         $id = $request->idd ?? $request->route('employee') ?? $request->id;
-        $empToDelete = employees::find($id);
+        $empToDelete = is_object($id) ? $id : employees::find($id);
 
         if (!$empToDelete) {
             return back()->with('error', 'الموظف غير موجود!');
@@ -468,7 +468,8 @@ class EmployeesController extends Controller implements HasMiddleware
         // 1. حذف الموظف فوراً من البرنامج وقاعدة البيانات وكافة السجلات المرتبطة به أولاً
         zkt::where('numid', $pin)->delete();
         nozkt::where('numid', $pin)->delete();
-        \Illuminate\Support\Facades\DB::table('zkt_device_sync')->where('emp_num', $pin)->delete();
+        \Illuminate\Support\Facades\DB::table('zkt_device_sync')->where('emp_num', (string)$pin)->delete();
+        \Illuminate\Support\Facades\DB::table('zkt_device_deletions')->where('emp_num', (string)$pin)->delete();
 
         if ($email) {
             $user = user::where('email', $email)->first();
@@ -483,8 +484,9 @@ class EmployeesController extends Controller implements HasMiddleware
         // 2. بعد الحذف من البرنامج، إرسال أوامر المزامنة لحذف الموظف من ماكينات البصمة:
         // أ) تسجيل أمر الحذف لوسيط الفروع (zk_mediator) لكافة الماكينات
         if ($pin) {
+            \App\Models\ZktDeletedUser::where('num', (string)$pin)->delete();
             \App\Models\ZktDeletedUser::create([
-                'num'        => $pin,
+                'num'        => (string)$pin,
                 'name'       => $name,
                 'device_key' => null, // لكل الأجهزة والفروع
                 'executed'   => 0,

@@ -43,15 +43,20 @@ echo PHP Found: %PHP_BIN%
 echo.
 echo اختر نوع المزامنة:
 echo.
-echo   [1] مزامنة الموظفين (رفع الجدد + حذف الموظفين المحذوفين من الماكينة)
-echo   [2] اعادة رفع جميع الموظفين (force)
+echo   [1] مزامنة الموظفين (رفع الجدد + حذف المحذوفين من الماكينة)
+echo   [2] اعادة رفع جميع الموظفين (Force Sync)
+echo   [3] فرض حذف الموظفين المحذوفين من الماكينة (Force Delete)
 echo.
-set /p CHOICE=اختيارك (1 او 2): 
+set /p CHOICE=اختيارك (1 او 2 او 3): 
 
 if "%CHOICE%"=="2" (
     echo.
     echo [FORCE] اعادة رفع جميع الموظفين للماكينة...
     "%PHP_BIN%" zk_mediator.php --force-sync
+) else if "%CHOICE%"=="3" (
+    echo.
+    echo [FORCE-DELETE] فرض حذف كافة الموظفين المحذوفين من الماكينة...
+    "%PHP_BIN%" zk_mediator.php --sync-users --force-delete
 ) else (
     echo.
     echo [SYNC] مزامنة الموظفين (إضافة الجدد وحذف المحذوفين)...

@@ -829,31 +829,66 @@ class CountController extends Controller implements HasMiddleware
     public function bulk_delete(Request $request)
     {
         if ($request->ids) {
-
-
-
             $emps = employees::whereIn('id', $request->ids)->get();
             $nums = $emps->pluck('num')->toArray();
-            // 1. حذف الموظفين من جميع أجهزة البصمة المسجلة في النظام
-            $allIps = ipzkt::pluck('ip')->toArray();
-            
-            foreach ($allIps as $ip) {
-                try {
-                    $zk = new ZKTeco($ip);
-                    if ($zk->connect()) {
-                        $zk->testVoice();
-                        // حذف كل الموظفين المختارين من هذا الجهاز
-                        foreach ($nums as $num) {
-                            $zk->removeUser($num);
-                        }
-                        $zk->disconnect();
-                    }
-                } catch (\Exception $e) {
-                    // في حالة فشل الاتصال بجهاز معين، نكمل البقية
+            $stringNums = array_map('strval', $nums);
+
+            // 1. تنظيف جداول مزامنة الأجهزة للموظفين المطلوب حذفهم
+            \Illuminate\Support\Facades\DB::table('zkt_device_sync')->whereIn('emp_num', $stringNums)->delete();
+            \Illuminate\Support\Facades\DB::table('zkt_device_deletions')->whereIn('emp_num', $stringNums)->delete();
+
+            // 2. تسجيل أمر الحذف لوسيط الفروع (zk_mediator) لكافة الماكينات
+            \App\Models\ZktDeletedUser::whereIn('num', $stringNums)->delete();
+            foreach ($emps as $emp) {
+                if ($emp->num) {
+                    \App\Models\ZktDeletedUser::create([
+                        'num'        => (string)$emp->num,
+                        'name'       => $emp->name,
+                        'device_key' => null, // لكل الأجهزة والفروع
+                        'executed'   => 0,
+                    ]);
                 }
             }
 
-        
+            // 3. إرسال أمر الحذف لكافة أجهزة ADMS السحابية
+            $admsDevices = \App\Models\ipzkt::whereNotNull('sn')->where('sn', '!=', '')->get();
+            if ($admsDevices->isNotEmpty()) {
+                foreach ($nums as $num) {
+                    if ($num) {
+                        foreach ($admsDevices as $device) {
+                            \App\Models\ZktCommand::create([
+                                'sn'      => $device->sn,
+                                'command' => "DATA DELETE userinfo PIN={$num}",
+                            ]);
+                        }
+                    }
+                }
+            }
+
+            // 4. حذف الموظفين من أجهزة البصمة المتاحة على الشبكة المحلية مباشرة (مع مهلة سريعة)
+            $allIps = ipzkt::pluck('ip')->toArray();
+            foreach ($allIps as $ip) {
+                if (filter_var($ip, FILTER_VALIDATE_IP)) {
+                    $sock = @fsockopen($ip, 4370, $errno, $errstr, 0.5);
+                    if ($sock) {
+                        fclose($sock);
+                        try {
+                            $zk = new ZKTeco($ip);
+                            if (@$zk->connect()) {
+                                foreach ($nums as $num) {
+                                    @$zk->removeUser((int)$num);
+                                    \Illuminate\Support\Facades\DB::table('zkt_device_deletions')->updateOrInsert(
+                                        ['device_key' => $ip, 'emp_num' => (string)$num],
+                                        ['deleted_at' => now(), 'updated_at' => now()]
+                                    );
+                                }
+                                @$zk->disconnect();
+                            }
+                        } catch (\Throwable $e) {}
+                    }
+                }
+            }
+
             // حذف سجلات البصمة
             zkt::whereIn('numid', $nums)->delete();
             nozkt::whereIn('numid', $nums)->delete();
@@ -865,7 +900,7 @@ class CountController extends Controller implements HasMiddleware
             }
 
             employees::whereIn('id', $request->ids)->delete();
-            return back()->with('delete', 'تم حذف الموظفين المختارين بنجاح');
+            return back()->with('delete', 'تم حذف الموظفين المختارين بنجاح وجاري مزامنة حذفهم من أجهزة البصمة.');
         }
         return back()->with('error', 'يرجى اختيار موظفين للحذف');
     }

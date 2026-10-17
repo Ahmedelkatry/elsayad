@@ -18,7 +18,7 @@
  *   --help     عرض تعليمات الاستخدام.
  */
 
-error_reporting(E_ALL);
+error_reporting(E_ALL & ~E_DEPRECATED & ~E_USER_DEPRECATED);
 ini_set('display_errors', 1);
 
 define('CONFIG_FILE', __DIR__ . '/config.json');
@@ -45,7 +45,7 @@ spl_autoload_register(function ($class) {
 use Rats\Zkteco\Lib\ZKTeco;
 
 // --- 2. Parse Command Line Arguments ---
-$options = getopt('', ['loop', 'force', 'debug', 'help', 'sync-users', 'force-sync']);
+$options = getopt('', ['loop', 'force', 'debug', 'help', 'sync-users', 'force-sync', 'force-delete']);
 if (isset($options['help'])) {
     echo "========================================================\n";
     echo "       ZK IP Mediator - Branch Attendance Sync Tool     \n";
@@ -58,15 +58,17 @@ if (isset($options['help'])) {
     echo "  --debug        Show verbose debug information.\n";
     echo "  --sync-users   Pull new employees from server and push them to the ZK device.\n";
     echo "  --force-sync   Re-push ALL employees to device (not just new ones).\n";
+    echo "  --force-delete Force delete ALL deleted employees from device.\n";
     echo "  --help         Show this help message.\n";
     exit(0);
 }
 
-$isLoop       = isset($options['loop']);
-$isForce      = isset($options['force']);
-$isDebug      = isset($options['debug']);
-$isSyncUsers  = isset($options['sync-users']) || isset($options['force-sync']);
-$isForceSync  = isset($options['force-sync']);
+$isLoop        = isset($options['loop']);
+$isForce       = isset($options['force']);
+$isDebug       = isset($options['debug']);
+$isSyncUsers   = isset($options['sync-users']) || isset($options['force-sync']) || isset($options['force-delete']);
+$isForceSync   = isset($options['force-sync']);
+$isForceDelete = isset($options['force-delete']);
 
 logMessage("INFO", "Starting ZK IP Mediator (Direct IP to Project API)...");
 
@@ -262,7 +264,7 @@ do {
 
     // ── مزامنة الموظفين مع ماكينة البصمة (إضافة الجدد وحذف المحذوفين) ──
     if ($isSyncUsers) {
-        syncDeletedUsersToDevices($config, $verifySsl, $isDebug);
+        syncDeletedUsersToDevices($config, $verifySsl, $isDebug, $isForceDelete);
         syncUsersToDevices($config, $verifySsl, $isDebug, $isForceSync);
     }
 
@@ -401,7 +403,7 @@ function syncUsersToDevices(array $config, bool $verifySsl, bool $isDebug, bool 
  * حذف الموظفين المحذوفين من السيرفر من ماكينة البصمة مباشرةً عبر الـ IP
  * ══════════════════════════════════════════════════════════════════
  */
-function syncDeletedUsersToDevices(array $config, bool $verifySsl, bool $isDebug): void
+function syncDeletedUsersToDevices(array $config, bool $verifySsl, bool $isDebug, bool $forceAll = false): void
 {
     $serverUrl = rtrim($config['server_url'], '/');
     $devices   = $config['devices'];
@@ -415,11 +417,17 @@ function syncDeletedUsersToDevices(array $config, bool $verifySsl, bool $isDebug
             continue;
         }
 
+        logMessage("INFO", "[USER-DELETE] Checking deleted employees from server for: $name");
+
         // 1. جلب قائمة الموظفين المطلوب حذفهم من السيرفر
-        $params = http_build_query([
+        $paramsArray = [
             'device_ip'   => $ip,
             'device_name' => $name,
-        ]);
+        ];
+        if ($forceAll) {
+            $paramsArray['force'] = '1';
+        }
+        $params = http_build_query($paramsArray);
         $deletedUrl = "{$serverUrl}/api/zkt/users/deleted?{$params}";
 
         $ch = curl_init($deletedUrl);
@@ -434,14 +442,13 @@ function syncDeletedUsersToDevices(array $config, bool $verifySsl, bool $isDebug
         curl_close($ch);
 
         if ($response === false || $httpCode < 200 || $httpCode >= 300) {
-            if ($isDebug) {
-                logMessage("ERROR", "[USER-DELETE] Failed to fetch deleted users from server. HTTP=$httpCode err=$curlErr");
-            }
+            logMessage("ERROR", "[USER-DELETE] Failed to fetch deleted users from server. HTTP=$httpCode err=$curlErr");
             continue;
         }
 
         $data = json_decode($response, true);
         if (!$data || $data['status'] !== 'success') {
+            logMessage("WARNING", "[USER-DELETE] Invalid response for deleted users from server.");
             continue;
         }
 
@@ -449,7 +456,7 @@ function syncDeletedUsersToDevices(array $config, bool $verifySsl, bool $isDebug
         $total        = count($deletedUsers);
 
         if ($total === 0) {
-            // لا يوجد موظفين محذوفين معلقين لهذا الجهاز
+            logMessage("INFO", "[USER-DELETE] No pending employee deletions for $name.");
             continue;
         }
 
@@ -464,35 +471,50 @@ function syncDeletedUsersToDevices(array $config, bool $verifySsl, bool $isDebug
 
         $zk->disableDevice();
 
+        // جلب قائمة مستخدمي الماكينة لمعرفة المعرف الداخلي UID الفعلي
+        $deviceUsers = [];
+        try {
+            $deviceUsers = $zk->getUser();
+        } catch (\Throwable $e) {}
+
         $removedPins = [];
-        $failedCount = 0;
 
         foreach ($deletedUsers as $item) {
             $uid     = (int)   ($item['uid']  ?? $item['pin'] ?? 0);
             $pin     = (string)($item['pin']  ?? $uid);
             $empName = (string)($item['name'] ?? '');
 
-            if ($uid <= 0) {
-                logMessage("WARNING", "[USER-DELETE] Skipping invalid UID: $uid ($empName)");
+            if ($uid <= 0 && empty($pin)) {
+                logMessage("WARNING", "[USER-DELETE] Skipping invalid PIN: $pin ($empName)");
                 continue;
             }
 
-            // أمر حذف المستخدم وبصماته من جهاز ZKTeco
-            $result = $zk->removeUser($uid);
-
-            // نعتبر الحذف منجزاً سواء تم الحذف بنجاح أو كان الموظف غير موجود أصلاً على الماكينة
-            $removedPins[] = $pin;
-            if ($result !== false) {
-                logMessage("INFO", "[USER-DELETE] ✔ Removed from device: PIN [$uid] $empName");
-            } else {
-                logMessage("INFO", "[USER-DELETE] User not present on device (or already cleared): PIN [$uid] $empName");
+            // تجميع كافة معرفات الموظف على الماكينة (UID و PIN)
+            $targetUids = array_unique(array_filter([$uid, (int)$pin]));
+            if (is_array($deviceUsers)) {
+                foreach ($deviceUsers as $du) {
+                    $uPin = (string)($du['userid'] ?? '');
+                    $uUid = (int)($du['uid'] ?? 0);
+                    if ($uPin === $pin || $uUid === (int)$pin || $uUid === $uid) {
+                        $targetUids[] = $uUid;
+                    }
+                }
             }
+
+            // تنفيذ أمر الحذف من الماكينة لكافة المعرفات المطابقة
+            $targetUids = array_unique(array_filter($targetUids));
+            foreach ($targetUids as $tUid) {
+                @$zk->removeUser($tUid);
+            }
+
+            $removedPins[] = $pin;
+            logMessage("INFO", "[USER-DELETE] ✔ Removed from device: PIN [$pin] $empName");
         }
 
         $zk->enableDevice();
         $zk->disconnect();
 
-        logMessage("INFO", "[USER-DELETE] Done for $name: " . count($removedPins) . " removed, $failedCount failed.");
+        logMessage("INFO", "[USER-DELETE] Done for $name: " . count($removedPins) . " processed.");
 
         // 3. إبلاغ السيرفر بنجاح الحذف من الماكينة لتحديث الحالة
         if (!empty($removedPins)) {
