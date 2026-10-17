@@ -154,28 +154,10 @@ class IpzktController extends Controller
                 ->pluck('emp_num')
                 ->toArray();
 
-            $query = employees::query()->whereNotNull('num');
-
-            if ($device && $device->start > 0 && $device->end > 0) {
-                $query->whereBetween('num', [$device->start, $device->end]);
-            }
-
-            if ($device) {
-                $devIp   = $device->ip;
-                $devSn   = $device->sn;
-                $devName = $device->name;
-                $query->where(function ($q) use ($devIp, $devSn, $devName) {
-                    $q->whereNull('ipz')
-                      ->orWhere('ipz', '')
-                      ->orWhere('ipz', 'LIKE', "%{$devIp}%");
-                    if ($devSn) {
-                        $q->orWhere('ipz', 'LIKE', "%{$devSn}%");
-                    }
-                    if ($devName) {
-                        $q->orWhere('ipz', 'LIKE', "%{$devName}%");
-                    }
-                });
-            }
+            $query = employees::query()
+                ->whereNotNull('num')
+                ->where('num', '!=', '')
+                ->where('num', '>', 0);
 
             if (!empty($alreadySynced)) {
                 $query->whereNotIn('num', $alreadySynced);
@@ -1150,29 +1132,11 @@ private function _processAdmsAttlog(string $rawBody, ipzkt $device): void
             $device ? $device->sn : null,
         ]));
 
-        // تحديد نطاق أرقام الموظفين للجهاز
-        $query = employees::query()->whereNotNull('num');
-
-        if ($device && $device->start > 0 && $device->end > 0) {
-            $query->whereBetween('num', [$device->start, $device->end]);
-        }
-
-        if ($device) {
-            $devIp   = $device->ip;
-            $devSn   = $device->sn;
-            $devName = $device->name;
-            $query->where(function ($q) use ($devIp, $devSn, $devName) {
-                $q->whereNull('ipz')
-                  ->orWhere('ipz', '')
-                  ->orWhere('ipz', 'LIKE', "%{$devIp}%");
-                if ($devSn) {
-                    $q->orWhere('ipz', 'LIKE', "%{$devSn}%");
-                }
-                if ($devName) {
-                    $q->orWhere('ipz', 'LIKE', "%{$devName}%");
-                }
-            });
-        }
+        // جلب جميع الموظفين المسجلين في النظام
+        $query = employees::query()
+            ->whereNotNull('num')
+            ->where('num', '!=', '')
+            ->where('num', '>', 0);
 
         // إذا لم يُطلب Force، نرجع فقط الموظفين الذين لم يُزامنوا بعد لهذا الجهاز تحديداً
         if (!$force && !empty($deviceKeys)) {

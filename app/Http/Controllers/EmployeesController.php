@@ -461,24 +461,13 @@ class EmployeesController extends Controller implements HasMiddleware
         $name = $empToDelete->name;
         $ipsList = $empToDelete->ipz ? array_filter(explode(',', $empToDelete->ipz)) : [];
 
-        // 1. تسجيل أمر الحذف في جدول zkt_deleted_users لمزامنة الوسيط (IP Mediator)
-        if (!empty($ipsList)) {
-            foreach ($ipsList as $ipOrSn) {
-                \App\Models\ZktDeletedUser::create([
-                    'num'        => $pin,
-                    'name'       => $name,
-                    'device_key' => $ipOrSn,
-                    'executed'   => 0,
-                ]);
-            }
-        } else {
-            \App\Models\ZktDeletedUser::create([
-                'num'        => $pin,
-                'name'       => $name,
-                'device_key' => null, // لكل الأجهزة
-                'executed'   => 0,
-            ]);
-        }
+        // 1. تسجيل أمر الحذف في جدول zkt_deleted_users لمزامنة الوسيط (IP Mediator) في كافة الفروع
+        \App\Models\ZktDeletedUser::create([
+            'num'        => $pin,
+            'name'       => $name,
+            'device_key' => null, // لكل الأجهزة والفروع
+            'executed'   => 0,
+        ]);
 
         // 2. إرسال أمر الحذف لجميع أجهزة ADMS (Cloud / SN)
         $admsDevices = \App\Models\ipzkt::whereNotNull('sn')->where('sn', '!=', '')->get();
