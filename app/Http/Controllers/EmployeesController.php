@@ -191,26 +191,71 @@ class EmployeesController extends Controller implements HasMiddleware
                 continue;
             }
 
-            // جهاز IP عادي → socket connection
-            if ($ipOrSn) {
-                $zk = new ZKTeco($ipOrSn);
-                if (! $zk->connect()) {
-                    return back()->withErrors(['ipz' => "جهاز البصمة [$deviceName] ($ipOrSn) متوقف عن العمل أو غير متصل بالشبكة! يرجى إصلاحه أولاً."])->withInput();
+            // جهاز IP عادي
+            $targetIp = ($device && $device->ip) ? $device->ip : $ipOrSn;
+            $isOnline = false;
+            if ($targetIp && filter_var($targetIp, FILTER_VALIDATE_IP)) {
+                $errno = 0;
+                $errstr = '';
+                $sock = @fsockopen($targetIp, 4370, $errno, $errstr, 1.2);
+                if ($sock) {
+                    fclose($sock);
+                    $zk = new ZKTeco($targetIp, 4370);
+                    if (@$zk->connect()) {
+                        $isOnline = true;
+                        $connectedDevices[] = [
+                            'zk'     => $zk,
+                            'device' => $device,
+                            'ip'     => $targetIp,
+                        ];
+                    }
                 }
-                $connectedDevices[] = $zk;
+            }
+
+            if (! $isOnline) {
+                // حذف سجل المزامنة للجهاز لإعادة إرسال البيانات المحدثة تلقائياً عند تشغيل الجهاز
+                $keysToDelete = array_unique(array_filter([
+                    $deviceName,
+                    $device ? $device->name : null,
+                    $device ? $device->ip : null,
+                    $targetIp,
+                ]));
+                \Illuminate\Support\Facades\DB::table('zkt_device_sync')
+                    ->whereIn('device_key', $keysToDelete)
+                    ->where('emp_num', (string) $request->num)
+                    ->delete();
             }
         }
 
-        $pass = $request->password === '' ? null : $request->password;
-        foreach ($connectedDevices as $zk) {
-            $zk->testVoice();
-            $zk->setUser(
-                $request->num,  // ID المستخدم (يجب أن يكون رقمًا فريدًا)
-                $request->num,   // رقم الموظف في النظام
-                $request->name,          // اسم الموظف
-                $pass,                            // كلمة المرور (يمكن تركها فارغة)
-                $request->role_zkt,     // دور المستخدم (0 لمستخدم، 14 لمشرف)
-            );
+        $pass = ($request->password === '' || $request->password === null) ? null : $request->password;
+        foreach ($connectedDevices as $item) {
+            $zk  = $item['zk'];
+            $dev = $item['device'];
+            try {
+                @$zk->testVoice();
+                @$zk->setUser(
+                    (int) $request->num,
+                    (string) $request->num,
+                    $request->name,
+                    $pass,
+                    (int) ($request->role_zkt ?? 0)
+                );
+                @$zk->disconnect();
+
+                $keysToSave = array_unique(array_filter([
+                    $dev ? $dev->name : null,
+                    $dev ? $dev->ip : null,
+                    $item['ip'],
+                ]));
+                foreach ($keysToSave as $k) {
+                    \Illuminate\Support\Facades\DB::table('zkt_device_sync')->updateOrInsert(
+                        ['device_key' => $k, 'emp_num' => (string) $request->num],
+                        ['synced_at' => now(), 'updated_at' => now()]
+                    );
+                }
+            } catch (\Throwable $e) {
+                \Log::warning("Direct ZKTeco update failed for {$item['ip']}: " . $e->getMessage());
+            }
         }
 
         if ($request->filled('phone_password')) {
@@ -563,6 +608,7 @@ class EmployeesController extends Controller implements HasMiddleware
         //  dd( iconv("Windows-1256","UTF-8",$request->name));
         $ipsList = is_array($request->ipz) ? $request->ipz : [];
         $connectedDevices = [];
+        $offlineDevices = [];
 
         foreach ($ipsList as $ipOrSn) {
             if (empty($ipOrSn)) {
@@ -590,25 +636,69 @@ class EmployeesController extends Controller implements HasMiddleware
                 continue; // لا نحاول socket لجهاز ADMS
             }
 
-            // جهاز IP عادي → socket connection
-            $deviceName = $device ? $device->name : 'جهاز غير معروف';
-            $zk = new ZKTeco($ipOrSn);
-            if (! $zk->connect()) {
-                return back()->withErrors(['num' => "جهاز البصمة [$deviceName] ($ipOrSn) متوقف عن العمل أو غير متصل بالشبكة! يرجى إصلاحه أولاً."])->withInput();
+            // جهاز IP عادي
+            $deviceName = $device ? $device->name : ($ipOrSn ?: 'جهاز غير معروف');
+            $targetIp = ($device && $device->ip) ? $device->ip : $ipOrSn;
+
+            $isOnline = false;
+            if ($targetIp && filter_var($targetIp, FILTER_VALIDATE_IP)) {
+                $errno = 0;
+                $errstr = '';
+                $sock = @fsockopen($targetIp, 4370, $errno, $errstr, 1.2);
+                if ($sock) {
+                    fclose($sock);
+                    $zk = new ZKTeco($targetIp, 4370);
+                    if (@$zk->connect()) {
+                        $isOnline = true;
+                        $connectedDevices[] = [
+                            'zk'     => $zk,
+                            'device' => $device,
+                            'ip'     => $targetIp,
+                            'name'   => $deviceName,
+                        ];
+                    }
+                }
             }
-            $connectedDevices[] = $zk;
+
+            if (! $isOnline) {
+                $offlineDevices[] = $deviceName;
+                \Log::info("Employee Create: Device [$deviceName] ($targetIp) is offline. Employee {$request->num} queued for auto-sync.");
+            }
         }
 
-        $pass = $request->password === '' ? null : $request->password;
-        foreach ($connectedDevices as $zk) {
-            $zk->testVoice();
-            $zk->setUser(
-                $request->num,
-                $request->num,
-                $request->name,
-                $pass,
-                $request->role_zkt,
-            );
+        $pass = ($request->password === '' || $request->password === null) ? null : $request->password;
+        foreach ($connectedDevices as $item) {
+            $zk     = $item['zk'];
+            $dev    = $item['device'];
+            $devKey = $dev ? ($dev->name ?: $dev->ip) : $item['ip'];
+
+            try {
+                @$zk->testVoice();
+                @$zk->setUser(
+                    (int) $request->num,
+                    (string) $request->num,
+                    $request->name,
+                    $pass,
+                    (int) ($request->role_zkt ?? 0),
+                );
+                @$zk->disconnect();
+
+                // تسجيل المزامنة الفورية لهذا الجهاز
+                $keysToSave = array_unique(array_filter([
+                    $devKey,
+                    $dev ? $dev->name : null,
+                    $dev ? $dev->ip : null,
+                    $item['ip'],
+                ]));
+                foreach ($keysToSave as $k) {
+                    \Illuminate\Support\Facades\DB::table('zkt_device_sync')->updateOrInsert(
+                        ['device_key' => $k, 'emp_num' => (string) $request->num],
+                        ['synced_at' => now(), 'updated_at' => now()]
+                    );
+                }
+            } catch (\Throwable $e) {
+                \Log::warning("Immediate ZKTeco setUser failed for {$item['ip']}: " . $e->getMessage());
+            }
         }
         if ($request->mobile) {
             $request->validate([
@@ -809,7 +899,11 @@ class EmployeesController extends Controller implements HasMiddleware
         // dd("done");
         $empD->save();
 
-        session()->flash('Add');
+        if (!empty($offlineDevices)) {
+            session()->flash('Add', 'تمت إضافة الموظف بنجاح في النظام! جهاز البصمة [' . implode(', ', $offlineDevices) . '] مغلق أو غير متصل حالياً، وسيتم رفعه للبصمة تلقائياً فور تشغيلها.');
+        } else {
+            session()->flash('Add', 'تمت إضافة الموظف ومزامنته مع أجهزة البصمة بنجاح.');
+        }
 
         return redirect('/employees');
     }

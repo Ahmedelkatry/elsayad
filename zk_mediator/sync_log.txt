@@ -4356,3 +4356,205 @@
 [2026-10-17 00:15:20] [INFO] [USER-SYNC] Fetching employees from server for: جهاز الفرع الرئيسي
 [2026-10-17 00:15:21] [INFO] [USER-SYNC] No new employees to sync for جهاز الفرع الرئيسي.
 [2026-10-17 00:15:21] [INFO] Cycle finished. Sleeping for 60 seconds before next check...
+[2026-10-17 00:16:21] [INFO] Processing device: جهاز الفرع الرئيسي (IP: 192.168.1.201:4370)
+[2026-10-17 00:16:21] [DEBUG] Connecting via IP socket to 192.168.1.201:4370...
+[2026-10-17 00:16:21] [INFO] Connected successfully to device: جهاز الفرع الرئيسي
+[2026-10-17 00:16:21] [INFO] Device has 6 total records stored in memory.
+[2026-10-17 00:16:21] [DEBUG] Disconnected from device socket: جهاز الفرع الرئيسي
+[2026-10-17 00:16:21] [DEBUG] Last synced timestamp: 2026-10-16 19:15:05
+[2026-10-17 00:16:21] [INFO] No new logs to upload for جهاز الفرع الرئيسي. Sending heartbeat ping to keep device Online.
+[2026-10-17 00:16:21] [DEBUG] Heartbeat received by server successfully.
+[2026-10-17 00:16:21] [INFO] [USER-SYNC] Fetching employees from server for: جهاز الفرع الرئيسي
+[2026-10-17 00:16:22] [INFO] [USER-SYNC] No new employees to sync for جهاز الفرع الرئيسي.
+[2026-10-17 00:16:22] [INFO] Cycle finished. Sleeping for 60 seconds before next check...
+[2026-10-17 00:17:22] [INFO] Processing device: جهاز الفرع الرئيسي (IP: 192.168.1.201:4370)
+[2026-10-17 00:17:22] [DEBUG] Connecting via IP socket to 192.168.1.201:4370...
+[2026-10-17 00:17:22] [INFO] Connected successfully to device: جهاز الفرع الرئيسي
+[2026-10-17 00:17:22] [INFO] Device has 6 total records stored in memory.
+[2026-10-17 00:17:22] [DEBUG] Disconnected from device socket: جهاز الفرع الرئيسي
+[2026-10-17 00:17:22] [DEBUG] Last synced timestamp: 2026-10-16 19:15:05
+[2026-10-17 00:17:22] [INFO] No new logs to upload for جهاز الفرع الرئيسي. Sending heartbeat ping to keep device Online.
+[2026-10-17 00:17:22] [DEBUG] Heartbeat received by server successfully.
+[2026-10-17 00:17:23] [INFO] [USER-SYNC] Fetching employees from server for: جهاز الفرع الرئيسي
+[2026-10-17 00:17:23] [INFO] [USER-SYNC] No new employees to sync for جهاز الفرع الرئيسي.
+[2026-10-17 00:17:23] [INFO] Cycle finished. Sleeping for 60 seconds before next check...
+[2026-10-17 00:18:23] [INFO] Processing device: جهاز الفرع الرئيسي (IP: 192.168.1.201:4370)
+[2026-10-17 00:18:23] [DEBUG] Connecting via IP socket to 192.168.1.201:4370...
+[2026-10-17 00:18:23] [INFO] Connected successfully to device: جهاز الفرع الرئيسي
+[2026-10-17 00:18:23] [INFO] Device has 6 total records stored in memory.
+[2026-10-17 00:18:23] [DEBUG] Disconnected from device socket: جهاز الفرع الرئيسي
+[2026-10-17 00:18:23] [DEBUG] Last synced timestamp: 2026-10-16 19:15:05
+[2026-10-17 00:18:23] [INFO] No new logs to upload for جهاز الفرع الرئيسي. Sending heartbeat ping to keep device Online.
+[2026-10-17 00:18:23] [DEBUG] Heartbeat received by server successfully.
+[2026-10-17 00:18:24] [INFO] [USER-SYNC] Fetching employees from server for: جهاز الفرع الرئيسي
+[2026-10-17 00:18:24] [INFO] [USER-SYNC] No new employees to sync for جهاز الفرع الرئيسي.
+[2026-10-17 00:18:24] [INFO] Cycle finished. Sleeping for 60 seconds before next check...
+[2026-10-17 00:19:24] [INFO] Processing device: جهاز الفرع الرئيسي (IP: 192.168.1.201:4370)
+[2026-10-17 00:19:24] [DEBUG] Connecting via IP socket to 192.168.1.201:4370...
+[2026-10-17 00:19:24] [INFO] Connected successfully to device: جهاز الفرع الرئيسي
+[2026-10-17 00:19:24] [INFO] Device has 6 total records stored in memory.
+[2026-10-17 00:19:24] [DEBUG] Disconnected from device socket: جهاز الفرع الرئيسي
+[2026-10-17 00:19:24] [DEBUG] Last synced timestamp: 2026-10-16 19:15:05
+[2026-10-17 00:19:24] [INFO] No new logs to upload for جهاز الفرع الرئيسي. Sending heartbeat ping to keep device Online.
+[2026-10-17 00:19:25] [DEBUG] Heartbeat received by server successfully.
+[2026-10-17 00:19:25] [INFO] [USER-SYNC] Fetching employees from server for: جهاز الفرع الرئيسي
+[2026-10-17 00:19:25] [INFO] [USER-SYNC] No new employees to sync for جهاز الفرع الرئيسي.
+[2026-10-17 00:19:25] [INFO] Cycle finished. Sleeping for 60 seconds before next check...
+[2026-10-17 00:19:56] [INFO] Starting ZK IP Mediator (Direct IP to Project API)...
+[2026-10-17 00:19:56] [INFO] Processing device: جهاز الفرع الرئيسي (IP: 192.168.1.201:4370)
+[2026-10-17 00:19:56] [DEBUG] Connecting via IP socket to 192.168.1.201:4370...
+[2026-10-17 00:19:56] [INFO] Connected successfully to device: جهاز الفرع الرئيسي
+[2026-10-17 00:19:56] [INFO] Device has 6 total records stored in memory.
+[2026-10-17 00:19:56] [DEBUG] Disconnected from device socket: جهاز الفرع الرئيسي
+[2026-10-17 00:19:56] [DEBUG] Last synced timestamp: 2026-10-16 19:15:05
+[2026-10-17 00:19:56] [INFO] No new logs to upload for جهاز الفرع الرئيسي. Sending heartbeat ping to keep device Online.
+[2026-10-17 00:19:56] [DEBUG] Heartbeat received by server successfully.
+[2026-10-17 00:19:57] [INFO] [USER-SYNC] Fetching employees from server for: جهاز الفرع الرئيسي
+[2026-10-17 00:19:57] [INFO] [USER-SYNC] No new employees to sync for جهاز الفرع الرئيسي.
+[2026-10-17 00:19:57] [INFO] Cycle finished. Sleeping for 60 seconds before next check...
+[2026-10-17 00:20:57] [INFO] Processing device: جهاز الفرع الرئيسي (IP: 192.168.1.201:4370)
+[2026-10-17 00:20:57] [DEBUG] Connecting via IP socket to 192.168.1.201:4370...
+[2026-10-17 00:20:57] [INFO] Connected successfully to device: جهاز الفرع الرئيسي
+[2026-10-17 00:20:57] [INFO] Device has 6 total records stored in memory.
+[2026-10-17 00:20:58] [DEBUG] Disconnected from device socket: جهاز الفرع الرئيسي
+[2026-10-17 00:20:58] [DEBUG] Last synced timestamp: 2026-10-16 19:15:05
+[2026-10-17 00:20:58] [INFO] No new logs to upload for جهاز الفرع الرئيسي. Sending heartbeat ping to keep device Online.
+[2026-10-17 00:20:58] [DEBUG] Heartbeat received by server successfully.
+[2026-10-17 00:20:59] [INFO] [USER-SYNC] Fetching employees from server for: جهاز الفرع الرئيسي
+[2026-10-17 00:20:59] [INFO] [USER-SYNC] Found 1 employee(s) to push to جهاز الفرع الرئيسي (192.168.1.201:4370).
+[2026-10-17 00:21:00] [INFO] [USER-SYNC] ✔ Pushed: [1] eeeeeeeeee
+[2026-10-17 00:21:00] [INFO] [USER-SYNC] Done for جهاز الفرع الرئيسي: 1 synced, 0 failed.
+[2026-10-17 00:21:00] [INFO] [USER-SYNC] Server confirmed sync for 1 employee(s) on device جهاز الفرع الرئيسي.
+[2026-10-17 00:21:00] [INFO] Cycle finished. Sleeping for 60 seconds before next check...
+[2026-10-17 00:22:00] [INFO] Processing device: جهاز الفرع الرئيسي (IP: 192.168.1.201:4370)
+[2026-10-17 00:22:00] [DEBUG] Connecting via IP socket to 192.168.1.201:4370...
+[2026-10-17 00:22:00] [INFO] Connected successfully to device: جهاز الفرع الرئيسي
+[2026-10-17 00:22:00] [INFO] Device has 6 total records stored in memory.
+[2026-10-17 00:22:00] [DEBUG] Disconnected from device socket: جهاز الفرع الرئيسي
+[2026-10-17 00:22:00] [DEBUG] Last synced timestamp: 2026-10-16 19:15:05
+[2026-10-17 00:22:00] [INFO] No new logs to upload for جهاز الفرع الرئيسي. Sending heartbeat ping to keep device Online.
+[2026-10-17 00:22:01] [DEBUG] Heartbeat received by server successfully.
+[2026-10-17 00:22:01] [INFO] [USER-SYNC] Fetching employees from server for: جهاز الفرع الرئيسي
+[2026-10-17 00:22:02] [INFO] [USER-SYNC] No new employees to sync for جهاز الفرع الرئيسي.
+[2026-10-17 00:22:02] [INFO] Cycle finished. Sleeping for 60 seconds before next check...
+[2026-10-17 00:23:02] [INFO] Processing device: جهاز الفرع الرئيسي (IP: 192.168.1.201:4370)
+[2026-10-17 00:23:02] [DEBUG] Connecting via IP socket to 192.168.1.201:4370...
+[2026-10-17 00:23:02] [INFO] Connected successfully to device: جهاز الفرع الرئيسي
+[2026-10-17 00:23:02] [INFO] Device has 6 total records stored in memory.
+[2026-10-17 00:23:02] [DEBUG] Disconnected from device socket: جهاز الفرع الرئيسي
+[2026-10-17 00:23:02] [DEBUG] Last synced timestamp: 2026-10-16 19:15:05
+[2026-10-17 00:23:02] [INFO] No new logs to upload for جهاز الفرع الرئيسي. Sending heartbeat ping to keep device Online.
+[2026-10-17 00:23:02] [DEBUG] Heartbeat received by server successfully.
+[2026-10-17 00:23:03] [INFO] [USER-SYNC] Fetching employees from server for: جهاز الفرع الرئيسي
+[2026-10-17 00:23:03] [INFO] [USER-SYNC] No new employees to sync for جهاز الفرع الرئيسي.
+[2026-10-17 00:23:03] [INFO] Cycle finished. Sleeping for 60 seconds before next check...
+[2026-10-17 00:24:03] [INFO] Processing device: جهاز الفرع الرئيسي (IP: 192.168.1.201:4370)
+[2026-10-17 00:24:03] [DEBUG] Connecting via IP socket to 192.168.1.201:4370...
+[2026-10-17 00:24:03] [INFO] Connected successfully to device: جهاز الفرع الرئيسي
+[2026-10-17 00:24:03] [INFO] Device has 6 total records stored in memory.
+[2026-10-17 00:24:03] [DEBUG] Disconnected from device socket: جهاز الفرع الرئيسي
+[2026-10-17 00:24:03] [DEBUG] Last synced timestamp: 2026-10-16 19:15:05
+[2026-10-17 00:24:03] [INFO] No new logs to upload for جهاز الفرع الرئيسي. Sending heartbeat ping to keep device Online.
+[2026-10-17 00:24:03] [DEBUG] Heartbeat received by server successfully.
+[2026-10-17 00:24:04] [INFO] [USER-SYNC] Fetching employees from server for: جهاز الفرع الرئيسي
+[2026-10-17 00:24:04] [INFO] [USER-SYNC] No new employees to sync for جهاز الفرع الرئيسي.
+[2026-10-17 00:24:04] [INFO] Cycle finished. Sleeping for 60 seconds before next check...
+[2026-10-17 00:25:04] [INFO] Processing device: جهاز الفرع الرئيسي (IP: 192.168.1.201:4370)
+[2026-10-17 00:25:04] [DEBUG] Connecting via IP socket to 192.168.1.201:4370...
+[2026-10-17 00:25:04] [INFO] Connected successfully to device: جهاز الفرع الرئيسي
+[2026-10-17 00:25:04] [INFO] Device has 6 total records stored in memory.
+[2026-10-17 00:25:04] [DEBUG] Disconnected from device socket: جهاز الفرع الرئيسي
+[2026-10-17 00:25:04] [DEBUG] Last synced timestamp: 2026-10-16 19:15:05
+[2026-10-17 00:25:04] [INFO] No new logs to upload for جهاز الفرع الرئيسي. Sending heartbeat ping to keep device Online.
+[2026-10-17 00:25:05] [DEBUG] Heartbeat received by server successfully.
+[2026-10-17 00:25:05] [INFO] [USER-SYNC] Fetching employees from server for: جهاز الفرع الرئيسي
+[2026-10-17 00:25:05] [INFO] [USER-SYNC] No new employees to sync for جهاز الفرع الرئيسي.
+[2026-10-17 00:25:05] [INFO] Cycle finished. Sleeping for 60 seconds before next check...
+[2026-10-17 00:26:05] [INFO] Processing device: جهاز الفرع الرئيسي (IP: 192.168.1.201:4370)
+[2026-10-17 00:26:05] [DEBUG] Connecting via IP socket to 192.168.1.201:4370...
+[2026-10-17 00:26:05] [INFO] Connected successfully to device: جهاز الفرع الرئيسي
+[2026-10-17 00:26:05] [INFO] Device has 6 total records stored in memory.
+[2026-10-17 00:26:06] [DEBUG] Disconnected from device socket: جهاز الفرع الرئيسي
+[2026-10-17 00:26:06] [DEBUG] Last synced timestamp: 2026-10-16 19:15:05
+[2026-10-17 00:26:06] [INFO] No new logs to upload for جهاز الفرع الرئيسي. Sending heartbeat ping to keep device Online.
+[2026-10-17 00:26:06] [DEBUG] Heartbeat received by server successfully.
+[2026-10-17 00:26:06] [INFO] [USER-SYNC] Fetching employees from server for: جهاز الفرع الرئيسي
+[2026-10-17 00:26:07] [INFO] [USER-SYNC] No new employees to sync for جهاز الفرع الرئيسي.
+[2026-10-17 00:26:07] [INFO] Cycle finished. Sleeping for 60 seconds before next check...
+[2026-10-17 00:27:07] [INFO] Processing device: جهاز الفرع الرئيسي (IP: 192.168.1.201:4370)
+[2026-10-17 00:27:07] [DEBUG] Connecting via IP socket to 192.168.1.201:4370...
+[2026-10-17 00:27:07] [INFO] Connected successfully to device: جهاز الفرع الرئيسي
+[2026-10-17 00:27:07] [INFO] Device has 6 total records stored in memory.
+[2026-10-17 00:27:07] [DEBUG] Disconnected from device socket: جهاز الفرع الرئيسي
+[2026-10-17 00:27:07] [DEBUG] Last synced timestamp: 2026-10-16 19:15:05
+[2026-10-17 00:27:07] [INFO] No new logs to upload for جهاز الفرع الرئيسي. Sending heartbeat ping to keep device Online.
+[2026-10-17 00:27:07] [DEBUG] Heartbeat received by server successfully.
+[2026-10-17 00:27:08] [INFO] [USER-SYNC] Fetching employees from server for: جهاز الفرع الرئيسي
+[2026-10-17 00:27:08] [INFO] [USER-SYNC] No new employees to sync for جهاز الفرع الرئيسي.
+[2026-10-17 00:27:08] [INFO] Cycle finished. Sleeping for 60 seconds before next check...
+[2026-10-17 00:28:08] [INFO] Processing device: جهاز الفرع الرئيسي (IP: 192.168.1.201:4370)
+[2026-10-17 00:28:08] [DEBUG] Connecting via IP socket to 192.168.1.201:4370...
+[2026-10-17 00:28:08] [INFO] Connected successfully to device: جهاز الفرع الرئيسي
+[2026-10-17 00:28:08] [INFO] Device has 6 total records stored in memory.
+[2026-10-17 00:28:08] [DEBUG] Disconnected from device socket: جهاز الفرع الرئيسي
+[2026-10-17 00:28:08] [DEBUG] Last synced timestamp: 2026-10-16 19:15:05
+[2026-10-17 00:28:08] [INFO] No new logs to upload for جهاز الفرع الرئيسي. Sending heartbeat ping to keep device Online.
+[2026-10-17 00:28:08] [DEBUG] Heartbeat received by server successfully.
+[2026-10-17 00:28:09] [INFO] [USER-SYNC] Fetching employees from server for: جهاز الفرع الرئيسي
+[2026-10-17 00:28:09] [INFO] [USER-SYNC] No new employees to sync for جهاز الفرع الرئيسي.
+[2026-10-17 00:28:09] [INFO] Cycle finished. Sleeping for 60 seconds before next check...
+[2026-10-17 00:29:09] [INFO] Processing device: جهاز الفرع الرئيسي (IP: 192.168.1.201:4370)
+[2026-10-17 00:29:09] [DEBUG] Connecting via IP socket to 192.168.1.201:4370...
+[2026-10-17 00:29:09] [INFO] Connected successfully to device: جهاز الفرع الرئيسي
+[2026-10-17 00:29:09] [INFO] Device has 6 total records stored in memory.
+[2026-10-17 00:29:09] [DEBUG] Disconnected from device socket: جهاز الفرع الرئيسي
+[2026-10-17 00:29:09] [DEBUG] Last synced timestamp: 2026-10-16 19:15:05
+[2026-10-17 00:29:09] [INFO] No new logs to upload for جهاز الفرع الرئيسي. Sending heartbeat ping to keep device Online.
+[2026-10-17 00:29:09] [DEBUG] Heartbeat received by server successfully.
+[2026-10-17 00:29:10] [INFO] [USER-SYNC] Fetching employees from server for: جهاز الفرع الرئيسي
+[2026-10-17 00:29:10] [INFO] [USER-SYNC] No new employees to sync for جهاز الفرع الرئيسي.
+[2026-10-17 00:29:10] [INFO] Cycle finished. Sleeping for 60 seconds before next check...
+[2026-10-17 00:30:10] [INFO] Processing device: جهاز الفرع الرئيسي (IP: 192.168.1.201:4370)
+[2026-10-17 00:30:10] [DEBUG] Connecting via IP socket to 192.168.1.201:4370...
+[2026-10-17 00:30:10] [INFO] Connected successfully to device: جهاز الفرع الرئيسي
+[2026-10-17 00:30:10] [INFO] Device has 6 total records stored in memory.
+[2026-10-17 00:30:10] [DEBUG] Disconnected from device socket: جهاز الفرع الرئيسي
+[2026-10-17 00:30:10] [DEBUG] Last synced timestamp: 2026-10-16 19:15:05
+[2026-10-17 00:30:10] [INFO] No new logs to upload for جهاز الفرع الرئيسي. Sending heartbeat ping to keep device Online.
+[2026-10-17 00:30:11] [DEBUG] Heartbeat received by server successfully.
+[2026-10-17 00:30:12] [INFO] [USER-SYNC] Fetching employees from server for: جهاز الفرع الرئيسي
+[2026-10-17 00:30:12] [INFO] [USER-SYNC] No new employees to sync for جهاز الفرع الرئيسي.
+[2026-10-17 00:30:12] [INFO] Cycle finished. Sleeping for 60 seconds before next check...
+[2026-10-17 00:31:12] [INFO] Processing device: جهاز الفرع الرئيسي (IP: 192.168.1.201:4370)
+[2026-10-17 00:31:12] [DEBUG] Connecting via IP socket to 192.168.1.201:4370...
+[2026-10-17 00:31:12] [INFO] Connected successfully to device: جهاز الفرع الرئيسي
+[2026-10-17 00:31:12] [INFO] Device has 6 total records stored in memory.
+[2026-10-17 00:31:12] [DEBUG] Disconnected from device socket: جهاز الفرع الرئيسي
+[2026-10-17 00:31:12] [DEBUG] Last synced timestamp: 2026-10-16 19:15:05
+[2026-10-17 00:31:12] [INFO] No new logs to upload for جهاز الفرع الرئيسي. Sending heartbeat ping to keep device Online.
+[2026-10-17 00:31:13] [DEBUG] Heartbeat received by server successfully.
+[2026-10-17 00:31:13] [INFO] [USER-SYNC] Fetching employees from server for: جهاز الفرع الرئيسي
+[2026-10-17 00:31:14] [INFO] [USER-SYNC] No new employees to sync for جهاز الفرع الرئيسي.
+[2026-10-17 00:31:14] [INFO] Cycle finished. Sleeping for 60 seconds before next check...
+[2026-10-17 00:32:14] [INFO] Processing device: جهاز الفرع الرئيسي (IP: 192.168.1.201:4370)
+[2026-10-17 00:32:14] [DEBUG] Connecting via IP socket to 192.168.1.201:4370...
+[2026-10-17 00:32:14] [INFO] Connected successfully to device: جهاز الفرع الرئيسي
+[2026-10-17 00:32:14] [INFO] Device has 6 total records stored in memory.
+[2026-10-17 00:32:14] [DEBUG] Disconnected from device socket: جهاز الفرع الرئيسي
+[2026-10-17 00:32:14] [DEBUG] Last synced timestamp: 2026-10-16 19:15:05
+[2026-10-17 00:32:14] [INFO] No new logs to upload for جهاز الفرع الرئيسي. Sending heartbeat ping to keep device Online.
+[2026-10-17 00:32:14] [DEBUG] Heartbeat received by server successfully.
+[2026-10-17 00:32:14] [INFO] [USER-SYNC] Fetching employees from server for: جهاز الفرع الرئيسي
+[2026-10-17 00:32:15] [INFO] [USER-SYNC] No new employees to sync for جهاز الفرع الرئيسي.
+[2026-10-17 00:32:15] [INFO] Cycle finished. Sleeping for 60 seconds before next check...
+[2026-10-17 00:33:15] [INFO] Processing device: جهاز الفرع الرئيسي (IP: 192.168.1.201:4370)
+[2026-10-17 00:33:15] [DEBUG] Connecting via IP socket to 192.168.1.201:4370...
+[2026-10-17 00:33:15] [INFO] Connected successfully to device: جهاز الفرع الرئيسي
+[2026-10-17 00:33:15] [INFO] Device has 6 total records stored in memory.
+[2026-10-17 00:33:15] [DEBUG] Disconnected from device socket: جهاز الفرع الرئيسي
+[2026-10-17 00:33:15] [DEBUG] Last synced timestamp: 2026-10-16 19:15:05
+[2026-10-17 00:33:15] [INFO] No new logs to upload for جهاز الفرع الرئيسي. Sending heartbeat ping to keep device Online.
+[2026-10-17 00:33:15] [DEBUG] Heartbeat received by server successfully.
+[2026-10-17 00:33:16] [INFO] [USER-SYNC] Fetching employees from server for: جهاز الفرع الرئيسي
+[2026-10-17 00:33:16] [INFO] [USER-SYNC] No new employees to sync for جهاز الفرع الرئيسي.
+[2026-10-17 00:33:16] [INFO] Cycle finished. Sleeping for 60 seconds before next check...

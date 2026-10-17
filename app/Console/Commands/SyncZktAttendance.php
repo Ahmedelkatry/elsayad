@@ -29,19 +29,38 @@ class SyncZktAttendance extends Command
      */
     public function handle()
     {
-        $this->info('Starting ZKTeco attendance sync...');
+        $this->info('Starting ZKTeco attendance and employee sync...');
 
-        $ips = ipzkt::pluck('ip')->toArray();
-        if (empty($ips)) {
-            $this->error('No ZKTeco IPs found in the database. Aborting.');
+        $devices = ipzkt::all();
+        if ($devices->isEmpty()) {
+            $this->error('No ZKTeco devices found in the database. Aborting.');
             return;
         }
 
-        // We simulate the HTTP Request to reuse the existing controller logic
+        // 1. مزامنة أي موظفين معلقين للأجهزة المتصلة
+        foreach ($devices as $device) {
+            if ($device->ip) {
+                try {
+                    $synced = \App\Http\Controllers\IpzktController::syncPendingEmployeesToDevice($device);
+                    if ($synced > 0) {
+                        $this->info("Successfully pushed {$synced} pending employee(s) to device [{$device->name}] ({$device->ip})");
+                    }
+                } catch (\Throwable $e) {
+                    $this->warn("User sync check skipped for [{$device->name}]: " . $e->getMessage());
+                }
+            }
+        }
+
+        $ips = $devices->pluck('ip')->filter()->toArray();
+        if (empty($ips)) {
+            $this->info('No IP devices for attendance pull.');
+            return;
+        }
+
+        // 2. سحب سجلات الحضور والانصراف
         $request = new Request();
         $request->replace([
             'ipz' => $ips,
-            // Sync from yesterday to today to ensure no overnight or very early shifts are missed
             'searchs' => Carbon::yesterday()->format('Y-m-d'),
             'searche' => Carbon::today()->format('Y-m-d'),
         ]);
@@ -51,7 +70,7 @@ class SyncZktAttendance extends Command
             $controller->create($request);
             $this->info('ZKTeco attendance sync completed successfully.');
         } catch (\Exception $e) {
-            $this->error('An error occurred during sync: ' . $e->getMessage());
+            $this->error('An error occurred during attendance sync: ' . $e->getMessage());
         }
     }
 }

@@ -124,12 +124,132 @@ class IpzktController extends Controller
     }
 
     /**
+     * مزامنة الموظفين المعلقين إلى جهاز بصمة محدد عبر الـ IP مباشرة
+     * يُستدعى تلقائياً عند تشغيل الجهاز، أو فحص حالته، أو سحب البصمات، أو عبر الأمر zkt:sync
+     */
+    public static function syncPendingEmployeesToDevice($deviceOrIp)
+    {
+        try {
+            $device = is_object($deviceOrIp)
+                ? $deviceOrIp
+                : ipzkt::where('ip', $deviceOrIp)->orWhere('name', $deviceOrIp)->orWhere('sn', $deviceOrIp)->first();
+
+            $targetIp = ($device && $device->ip) ? $device->ip : (is_string($deviceOrIp) ? $deviceOrIp : null);
+
+            if (!$targetIp || !filter_var($targetIp, FILTER_VALIDATE_IP)) {
+                return 0;
+            }
+
+            // مفاتيح الجهاز لمطابقتها في جدول zkt_device_sync
+            $deviceKeys = array_unique(array_filter([
+                $targetIp,
+                $device ? $device->name : null,
+                $device ? $device->ip : null,
+                $device ? $device->sn : null,
+            ]));
+
+            // استبعاد الموظفين الذين تمت مزامنتهم بالفعل لهذا الجهاز
+            $alreadySynced = DB::table('zkt_device_sync')
+                ->whereIn('device_key', $deviceKeys)
+                ->pluck('emp_num')
+                ->toArray();
+
+            $query = employees::query()->whereNotNull('num');
+
+            if ($device && $device->start > 0 && $device->end > 0) {
+                $query->whereBetween('num', [$device->start, $device->end]);
+            }
+
+            if ($device) {
+                $devIp   = $device->ip;
+                $devSn   = $device->sn;
+                $devName = $device->name;
+                $query->where(function ($q) use ($devIp, $devSn, $devName) {
+                    $q->whereNull('ipz')
+                      ->orWhere('ipz', '')
+                      ->orWhere('ipz', 'LIKE', "%{$devIp}%");
+                    if ($devSn) {
+                        $q->orWhere('ipz', 'LIKE', "%{$devSn}%");
+                    }
+                    if ($devName) {
+                        $q->orWhere('ipz', 'LIKE', "%{$devName}%");
+                    }
+                });
+            }
+
+            if (!empty($alreadySynced)) {
+                $query->whereNotIn('num', $alreadySynced);
+            }
+
+            $pendingEmps = $query->get();
+            if ($pendingEmps->isEmpty()) {
+                return 0; // لا يوجد موظفين معلقين
+            }
+
+            // فحص سريع للسوكيت أولاً (1.2 ثانية مهلة) للتأكد أن البصمة تعمل
+            $errno = 0;
+            $errstr = '';
+            $testSock = @fsockopen($targetIp, 4370, $errno, $errstr, 1.2);
+            if (!$testSock) {
+                return 0; // الجهاز مغلق حالياً
+            }
+            fclose($testSock);
+
+            // الاتصال بماكينة البصمة
+            $zk = new \Rats\Zkteco\Lib\ZKTeco($targetIp, 4370);
+            if (!@$zk->connect()) {
+                return 0;
+            }
+
+            @$zk->disableDevice();
+            $syncedCount = 0;
+
+            foreach ($pendingEmps as $emp) {
+                $uid = (int) $emp->num;
+                if ($uid <= 0) {
+                    continue;
+                }
+
+                $pass = ($emp->password === '' || $emp->password === null) ? null : $emp->password;
+                $role = (int) ($emp->role_zkt ?? 0);
+                if ($role !== 14) {
+                    $role = 0;
+                }
+
+                $res = @$zk->setUser($uid, (string)$uid, $emp->name, $pass, $role);
+                if ($res !== false) {
+                    $syncedCount++;
+                    foreach ($deviceKeys as $k) {
+                        DB::table('zkt_device_sync')->updateOrInsert(
+                            ['device_key' => $k, 'emp_num' => (string)$uid],
+                            ['synced_at' => now(), 'updated_at' => now()]
+                        );
+                    }
+                    $emp->update(['zkt_synced' => 1]);
+                }
+            }
+
+            @$zk->enableDevice();
+            @$zk->disconnect();
+
+            if ($syncedCount > 0) {
+                \Log::info("ZKTeco Auto-Sync: Automatically pushed {$syncedCount} employee(s) to device {$targetIp} (" . ($device ? $device->name : '') . ")");
+            }
+
+            return $syncedCount;
+
+        } catch (\Throwable $e) {
+            \Log::warning("ZKTeco Auto-Sync failed for {$deviceOrIp}: " . $e->getMessage());
+            return 0;
+        }
+    }
+
+    /**
      * Check if the fingerprint device is connected to the network.
-     * Uses fast socket check (1 second timeout) instead of full ZKTeco protocol.
+     * Uses fast socket check (1.2 second timeout) and auto-syncs any pending employees.
      */
     public function check_status($ip)
     {
-        \Log::info("check_status called with param: " . $ip);
         try {
             // البحث عن الجهاز في قاعدة البيانات أولاً
             $device = ipzkt::where('ip', $ip)->orWhere('sn', $ip)->orWhere('name', $ip)->first();
@@ -137,23 +257,27 @@ class IpzktController extends Controller
             // تحديد الـ IP المستهدف للفحص
             $targetIp = ($device && $device->ip) ? $device->ip : $ip;
 
-            // إذا كان الجهاز لديه IP → نفحص Socket أولاً (في حال كان السيرفر على نفس الشبكة)
+            // إذا كان الجهاز لديه IP → نفحص Socket أولاً
             if ($targetIp && filter_var($targetIp, FILTER_VALIDATE_IP)) {
-                \Log::info("check_status: Socket check for IP: " . $targetIp);
                 $errno = 0;
                 $errstr = '';
                 $socket = @fsockopen($targetIp, 4370, $errno, $errstr, 1.2);
                 if ($socket) {
                     fclose($socket);
-                    \Log::info("check_status: Port 4370 open → online");
-                    return response()->json(['status' => 'online', 'mode' => 'ip']);
+
+                    // الجهاز متصل وشغال الآن! نقوم بمزامنة أي موظفين معلقين فوراً
+                    $syncedCount = self::syncPendingEmployeesToDevice($device ?: $targetIp);
+
+                    return response()->json([
+                        'status' => 'online',
+                        'mode' => 'ip',
+                        'synced_employees' => $syncedCount,
+                    ]);
                 }
-                \Log::info("check_status: Port 4370 closed on " . $targetIp . " | err=$errno $errstr");
             }
 
             // إذا كان الجهاز لديه نشاط حديث خلال آخر 5 دقائق (من وسيط الفروع zk_mediator أو ADMS)
             if ($device && $device->last_activity && \Carbon\Carbon::parse($device->last_activity)->gt(now()->subMinutes(5))) {
-                \Log::info("check_status: Active via mediator/last_activity: " . $device->last_activity);
                 return response()->json(['status' => 'online', 'mode' => 'mediator']);
             }
 
@@ -1016,6 +1140,16 @@ private function _processAdmsAttlog(string $rawBody, ipzkt $device): void
             $device = ipzkt::where('name', $deviceName)->orWhere('ip', $deviceName)->first();
         }
 
+        // تحديد مفاتيح الجهاز للمطابقة الموثوقة في zkt_device_sync
+        $deviceKeys = array_unique(array_filter([
+            $deviceKey,
+            $deviceName,
+            $deviceIp,
+            $device ? $device->name : null,
+            $device ? $device->ip : null,
+            $device ? $device->sn : null,
+        ]));
+
         // تحديد نطاق أرقام الموظفين للجهاز
         $query = employees::query()->whereNotNull('num');
 
@@ -1023,10 +1157,27 @@ private function _processAdmsAttlog(string $rawBody, ipzkt $device): void
             $query->whereBetween('num', [$device->start, $device->end]);
         }
 
+        if ($device) {
+            $devIp   = $device->ip;
+            $devSn   = $device->sn;
+            $devName = $device->name;
+            $query->where(function ($q) use ($devIp, $devSn, $devName) {
+                $q->whereNull('ipz')
+                  ->orWhere('ipz', '')
+                  ->orWhere('ipz', 'LIKE', "%{$devIp}%");
+                if ($devSn) {
+                    $q->orWhere('ipz', 'LIKE', "%{$devSn}%");
+                }
+                if ($devName) {
+                    $q->orWhere('ipz', 'LIKE', "%{$devName}%");
+                }
+            });
+        }
+
         // إذا لم يُطلب Force، نرجع فقط الموظفين الذين لم يُزامنوا بعد لهذا الجهاز تحديداً
-        if (!$force && $deviceKey) {
+        if (!$force && !empty($deviceKeys)) {
             $alreadySynced = DB::table('zkt_device_sync')
-                ->where('device_key', $deviceKey)
+                ->whereIn('device_key', $deviceKeys)
                 ->pluck('emp_num')
                 ->toArray();
 
@@ -1068,12 +1219,30 @@ private function _processAdmsAttlog(string $rawBody, ipzkt $device): void
             return response()->json(['status' => 'error', 'message' => 'No synced_nums provided'], 422);
         }
 
+        $device = null;
+        if ($deviceIp) {
+            $device = ipzkt::where('ip', $deviceIp)->orWhere('name', $deviceIp)->first();
+        }
+        if (!$device && $deviceName) {
+            $device = ipzkt::where('name', $deviceName)->orWhere('ip', $deviceName)->first();
+        }
+
+        $keysToSave = array_unique(array_filter([
+            $deviceKey,
+            $deviceName,
+            $deviceIp,
+            $device ? $device->name : null,
+            $device ? $device->ip : null,
+        ]));
+
         // تحديث جدول المزامنة لكل جهاز فرع على حدة
         foreach ($syncedNums as $num) {
-            DB::table('zkt_device_sync')->updateOrInsert(
-                ['device_key' => $deviceKey, 'emp_num' => (string)$num],
-                ['synced_at' => now(), 'updated_at' => now()]
-            );
+            foreach ($keysToSave as $k) {
+                DB::table('zkt_device_sync')->updateOrInsert(
+                    ['device_key' => $k, 'emp_num' => (string)$num],
+                    ['synced_at' => now(), 'updated_at' => now()]
+                );
+            }
         }
 
         // تحديث حالة zkt_synced العامة كعلامة إضافية

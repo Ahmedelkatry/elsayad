@@ -135,6 +135,9 @@ class ZktController extends Controller implements HasMiddleware
 
             $connectedAny = false;
             foreach ($ips as $ip) {
+                // مزامنة أي موظفين معلقين تلقائياً إذا كان الجهاز متصلاً
+                \App\Http\Controllers\IpzktController::syncPendingEmployeesToDevice($ip);
+
                 $zk = new ZKTeco($ip);
                 if ($zk->connect()) {
                     $zk->testVoice();
