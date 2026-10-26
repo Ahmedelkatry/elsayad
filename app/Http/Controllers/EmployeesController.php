@@ -78,9 +78,9 @@ class EmployeesController extends Controller implements HasMiddleware
         ]);
 
         $data = $request->all();
-        if (isset($data['ipz']) && is_array($data['ipz'])) {
-            $data['ipz'] = implode(',', $data['ipz']);
-        }
+        $ipsList = isset($data['ipz']) ? (is_array($data['ipz']) ? array_filter($data['ipz']) : array_filter(explode(',', $data['ipz']))) : [];
+        $data['ipz'] = !empty($ipsList) ? implode(',', $ipsList) : null;
+
         if ($request->filled('phone_password')) {
             $data['phone_password'] = bcrypt($request->phone_password);
         }
@@ -90,16 +90,21 @@ class EmployeesController extends Controller implements HasMiddleware
         \App\Models\ZktDeletedUser::where('num', $employee->num)->delete();
         \Illuminate\Support\Facades\DB::table('zkt_device_deletions')->where('emp_num', $employee->num)->delete();
         \Illuminate\Support\Facades\DB::table('zkt_device_sync')->where('emp_num', $employee->num)->delete();
-        $admsDevices = \App\Models\ipzkt::whereNotNull('sn')->where('sn', '!=', '')->get();
-        foreach ($admsDevices as $device) {
-            $pin = $employee->num;
-            $name = $employee->name;
-            $cmdString = "DATA USER PIN={$pin}\tName={$name}\tPri=0";
 
-            \App\Models\ZktCommand::create([
-                'sn' => $device->sn,
-                'command' => $cmdString,
-            ]);
+        if (!empty($ipsList)) {
+            $admsDevices = \App\Models\ipzkt::whereNotNull('sn')->where('sn', '!=', '')->get();
+            foreach ($admsDevices as $device) {
+                if (in_array($device->sn, $ipsList) || in_array($device->ip, $ipsList) || in_array($device->name, $ipsList)) {
+                    $pin = $employee->num;
+                    $name = $employee->name;
+                    $cmdString = "DATA USER PIN={$pin}\tName={$name}\tPri=0";
+
+                    \App\Models\ZktCommand::create([
+                        'sn' => $device->sn,
+                        'command' => $cmdString,
+                    ]);
+                }
+            }
         }
 
         return back();
@@ -268,6 +273,35 @@ class EmployeesController extends Controller implements HasMiddleware
         }
 
         $empD = employees::find($id);
+        $oldIps = $empD->ipz ? array_filter(array_map('trim', explode(',', $empD->ipz))) : [];
+        $newIps = is_array($request->ipz) ? array_filter($request->ipz) : ($request->ipz ? array_filter(array_map('trim', explode(',', $request->ipz))) : []);
+
+        // إذا تم استبعاد الموظف من جهاز كان مضافاً فيه، يتم جدولته للحذف من ذلك الجهاز فقط
+        $removedIps = array_diff($oldIps, $newIps);
+        if (!empty($removedIps)) {
+            foreach ($removedIps as $remIp) {
+                $remKeys = [$remIp];
+                $dev = \App\Models\ipzkt::where('ip', $remIp)->orWhere('sn', $remIp)->orWhere('name', $remIp)->first();
+                if ($dev) {
+                    if ($dev->name) $remKeys[] = $dev->name;
+                    if ($dev->ip) $remKeys[] = $dev->ip;
+                    if ($dev->sn) $remKeys[] = $dev->sn;
+                }
+                foreach (array_unique(array_filter($remKeys)) as $dKey) {
+                    \App\Models\ZktDeletedUser::create([
+                        'num'        => (string)$empD->num,
+                        'name'       => $empD->name,
+                        'device_key' => $dKey,
+                        'executed'   => 0,
+                    ]);
+                }
+                \Illuminate\Support\Facades\DB::table('zkt_device_sync')
+                    ->whereIn('device_key', $remKeys)
+                    ->where('emp_num', (string)$empD->num)
+                    ->delete();
+            }
+        }
+
         $empD->num = $request->num;
         $empD->name = $request->name;
         $empD->password = $request->password;
@@ -282,7 +316,7 @@ class EmployeesController extends Controller implements HasMiddleware
         $empD->free_d = $request->free_d;
         $empD->choosesys = $request->choosesys;
         $empD->check = $request->check;
-        $empD->ipz = is_array($request->ipz) ? implode(',', $request->ipz) : $request->ipz;
+        $empD->ipz = !empty($newIps) ? implode(',', $newIps) : null;
         $empD->section_id = $request->section_id;
         $empD->shift_id = $request->shift_id;
         $empD->kabd = $request->kabd;
@@ -463,7 +497,15 @@ class EmployeesController extends Controller implements HasMiddleware
         $pin = $empToDelete->num ?? $request->idzkt;
         $name = $empToDelete->name;
         $email = $empToDelete->email;
-        $ipsList = $empToDelete->ipz ? array_filter(explode(',', $empToDelete->ipz)) : [];
+        $ipsList = $empToDelete->ipz ? array_filter(array_map('trim', explode(',', $empToDelete->ipz))) : [];
+
+        // الأجهزة التي كان الموظف مضافاً فيها (من ipz أو من جدول المزامنة الفعلي)
+        $syncedDeviceKeys = \Illuminate\Support\Facades\DB::table('zkt_device_sync')
+            ->where('emp_num', (string)$pin)
+            ->pluck('device_key')
+            ->toArray();
+
+        $allAssignedKeys = array_unique(array_filter(array_merge($ipsList, $syncedDeviceKeys)));
 
         // 1. حذف الموظف فوراً من البرنامج وقاعدة البيانات وكافة السجلات المرتبطة به أولاً
         zkt::where('numid', $pin)->delete();
@@ -481,52 +523,65 @@ class EmployeesController extends Controller implements HasMiddleware
         // الحذف الفعلي والنهائي للموظف من البرنامج
         $empToDelete->delete();
 
-        // 2. بعد الحذف من البرنامج، إرسال أوامر المزامنة لحذف الموظف من ماكينات البصمة:
-        // أ) تسجيل أمر الحذف لوسيط الفروع (zk_mediator) لكافة الماكينات
-        if ($pin) {
-            \App\Models\ZktDeletedUser::where('num', (string)$pin)->delete();
-            \App\Models\ZktDeletedUser::create([
-                'num'        => (string)$pin,
-                'name'       => $name,
-                'device_key' => null, // لكل الأجهزة والفروع
-                'executed'   => 0,
-            ]);
-        }
+        // 2. بعد الحذف من البرنامج، إرسال أوامر المزامنة لحذف الموظف من ماكينات البصمة التي كان مضافاً فيها فقط:
+        if ($pin && !empty($allAssignedKeys)) {
+            // تجميع كل المفاتيح المعرّفة لتلك الأجهزة فقط (IP, Name, SN)
+            $targetDeviceKeys = [];
+            foreach ($allAssignedKeys as $key) {
+                $targetDeviceKeys[] = $key;
+                $dev = \App\Models\ipzkt::where('ip', $key)
+                    ->orWhere('sn', $key)
+                    ->orWhere('name', $key)
+                    ->first();
+                if ($dev) {
+                    if ($dev->name) $targetDeviceKeys[] = $dev->name;
+                    if ($dev->ip) $targetDeviceKeys[] = $dev->ip;
+                    if ($dev->sn) $targetDeviceKeys[] = $dev->sn;
+                }
+            }
+            $targetDeviceKeys = array_unique(array_filter($targetDeviceKeys));
 
-        // ب) إرسال أمر الحذف لجميع أجهزة ADMS (Cloud / SN)
-        if ($pin) {
+            // أ) تسجيل أمر الحذف لوسيط الفروع (zk_mediator) للأجهزة المحددة فقط (وليس كل الأجهزة)
+            \App\Models\ZktDeletedUser::where('num', (string)$pin)->delete();
+            foreach ($targetDeviceKeys as $dKey) {
+                \App\Models\ZktDeletedUser::create([
+                    'num'        => (string)$pin,
+                    'name'       => $name,
+                    'device_key' => $dKey, // محدد للجهاز / الفرع المضاف فيه فقط
+                    'executed'   => 0,
+                ]);
+            }
+
+            // ب) إرسال أمر الحذف لأجهزة ADMS (Cloud / SN) المضاف فيها الموظف فقط
             $admsDevices = \App\Models\ipzkt::whereNotNull('sn')->where('sn', '!=', '')->get();
             foreach ($admsDevices as $device) {
-                if (empty($ipsList) || in_array($device->sn, $ipsList) || in_array($device->ip, $ipsList)) {
+                if (in_array($device->sn, $targetDeviceKeys) || in_array($device->ip, $targetDeviceKeys) || in_array($device->name, $targetDeviceKeys)) {
                     \App\Models\ZktCommand::create([
                         'sn'      => $device->sn,
                         'command' => "DATA DELETE userinfo PIN={$pin}",
                     ]);
                 }
             }
-        }
 
-        // ج) محاولة حذف مباشرة وسريعة بالسوكت إن كانت الماكينة متصلة بنفس الشبكة المحلية
-        // مع فحص سوكت خفيف 0.5 ثانية فقط لتجنب أي تعليق أو بطء
-        if ($pin && !empty($ipsList)) {
-            foreach ($ipsList as $ipOrSn) {
-                if (filter_var($ipOrSn, FILTER_VALIDATE_IP)) {
-                    $sock = @fsockopen($ipOrSn, 4370, $errno, $errstr, 0.5);
+            // ج) محاولة حذف مباشرة وسريعة بالسوكت إن كانت الماكينة متصلة بنفس الشبكة المحلية
+            foreach ($targetDeviceKeys as $ipCandidate) {
+                if (filter_var($ipCandidate, FILTER_VALIDATE_IP)) {
+                    $sock = @fsockopen($ipCandidate, 4370, $errno, $errstr, 0.5);
                     if ($sock) {
                         fclose($sock);
                         try {
-                            $zk = new ZKTeco($ipOrSn, 4370);
+                            $zk = new ZKTeco($ipCandidate, 4370);
                             if (@$zk->connect()) {
                                 @$zk->removeUser((int)$pin);
                                 @$zk->disconnect();
 
                                 \Illuminate\Support\Facades\DB::table('zkt_device_deletions')->updateOrInsert(
-                                    ['device_key' => $ipOrSn, 'emp_num' => (string)$pin],
+                                    ['device_key' => $ipCandidate, 'emp_num' => (string)$pin],
                                     ['deleted_at' => now(), 'updated_at' => now()]
                                 );
                             }
                         } catch (\Throwable $e) {
-                            \Illuminate\Support\Facades\Log::warning("Direct ZKTeco removal failed for $ipOrSn, user $pin: " . $e->getMessage());
+                            \Illuminate\Support\Facades\Log::warning("Direct ZKTeco removal failed for $ipCandidate, user $pin: " . $e->getMessage());
                         }
                     }
                 }
@@ -603,9 +658,12 @@ class EmployeesController extends Controller implements HasMiddleware
             'name.unique' => 'اسم الموظف موجود بالفعل',
         ]);
 
-        // dd( iconv("UTF-8","Windows-1256",$request->name));
-        //  dd( iconv("Windows-1256","UTF-8",$request->name));
-        $ipsList = is_array($request->ipz) ? $request->ipz : [];
+        // مسح أي أوامر حذف سابقة معلقة أو سجلات مزامنة قديمة لنفس رقم البصمة لضمان النظافة التامة
+        \App\Models\ZktDeletedUser::where('num', (string) $request->num)->delete();
+        \Illuminate\Support\Facades\DB::table('zkt_device_deletions')->where('emp_num', (string) $request->num)->delete();
+        \Illuminate\Support\Facades\DB::table('zkt_device_sync')->where('emp_num', (string) $request->num)->delete();
+
+        $ipsList = is_array($request->ipz) ? array_filter($request->ipz) : ($request->ipz ? array_filter(explode(',', $request->ipz)) : []);
         $connectedDevices = [];
         $offlineDevices = [];
 
@@ -741,7 +799,7 @@ class EmployeesController extends Controller implements HasMiddleware
         $empD->free_d = $request->free_d;
         $empD->choosesys = $request->choosesys;
         $empD->check = $request->check;
-        $empD->ipz = is_array($request->ipz) ? implode(',', $request->ipz) : $request->ipz;
+        $empD->ipz = !empty($ipsList) ? implode(',', $ipsList) : null;
         $empD->section_id = $request->section_id;
         $empD->shift_id = $request->shift_id;
         $empD->kabd = $request->kabd;

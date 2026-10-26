@@ -833,61 +833,83 @@ class CountController extends Controller implements HasMiddleware
             $nums = $emps->pluck('num')->toArray();
             $stringNums = array_map('strval', $nums);
 
-            // 1. تنظيف جداول مزامنة الأجهزة للموظفين المطلوب حذفهم
-            \Illuminate\Support\Facades\DB::table('zkt_device_sync')->whereIn('emp_num', $stringNums)->delete();
-            \Illuminate\Support\Facades\DB::table('zkt_device_deletions')->whereIn('emp_num', $stringNums)->delete();
-
-            // 2. تسجيل أمر الحذف لوسيط الفروع (zk_mediator) لكافة الماكينات
+            // تنظيف أي أوامر حذف سابقة لنفس أرقام الموظفين
             \App\Models\ZktDeletedUser::whereIn('num', $stringNums)->delete();
+
+            $admsDevices = \App\Models\ipzkt::whereNotNull('sn')->where('sn', '!=', '')->get();
+
             foreach ($emps as $emp) {
-                if ($emp->num) {
+                if (!$emp->num) continue;
+                $pin = (string)$emp->num;
+
+                $empIps = $emp->ipz ? array_filter(array_map('trim', explode(',', $emp->ipz))) : [];
+                $syncedDeviceKeys = \Illuminate\Support\Facades\DB::table('zkt_device_sync')
+                    ->where('emp_num', $pin)
+                    ->pluck('device_key')
+                    ->toArray();
+
+                $allAssignedKeys = array_unique(array_filter(array_merge($empIps, $syncedDeviceKeys)));
+                if (empty($allAssignedKeys)) {
+                    continue; // الموظف لم يكن مضافاً في أي جهاز بصمة
+                }
+
+                $targetDeviceKeys = [];
+                foreach ($allAssignedKeys as $key) {
+                    $targetDeviceKeys[] = $key;
+                    $dev = \App\Models\ipzkt::where('ip', $key)->orWhere('sn', $key)->orWhere('name', $key)->first();
+                    if ($dev) {
+                        if ($dev->name) $targetDeviceKeys[] = $dev->name;
+                        if ($dev->ip) $targetDeviceKeys[] = $dev->ip;
+                        if ($dev->sn) $targetDeviceKeys[] = $dev->sn;
+                    }
+                }
+                $targetDeviceKeys = array_unique(array_filter($targetDeviceKeys));
+
+                // أ) تسجيل أمر الحذف لوسيط الفروع (zk_mediator) لأجهزة هذا الموظف فقط
+                foreach ($targetDeviceKeys as $dKey) {
                     \App\Models\ZktDeletedUser::create([
-                        'num'        => (string)$emp->num,
+                        'num'        => $pin,
                         'name'       => $emp->name,
-                        'device_key' => null, // لكل الأجهزة والفروع
+                        'device_key' => $dKey, // محدد للجهاز المضاف فيه فقط
                         'executed'   => 0,
                     ]);
                 }
-            }
 
-            // 3. إرسال أمر الحذف لكافة أجهزة ADMS السحابية
-            $admsDevices = \App\Models\ipzkt::whereNotNull('sn')->where('sn', '!=', '')->get();
-            if ($admsDevices->isNotEmpty()) {
-                foreach ($nums as $num) {
-                    if ($num) {
-                        foreach ($admsDevices as $device) {
-                            \App\Models\ZktCommand::create([
-                                'sn'      => $device->sn,
-                                'command' => "DATA DELETE userinfo PIN={$num}",
-                            ]);
+                // ب) إرسال أمر الحذف لأجهزة ADMS المضاف فيها الموظف فقط
+                foreach ($admsDevices as $device) {
+                    if (in_array($device->sn, $targetDeviceKeys) || in_array($device->ip, $targetDeviceKeys) || in_array($device->name, $targetDeviceKeys)) {
+                        \App\Models\ZktCommand::create([
+                            'sn'      => $device->sn,
+                            'command' => "DATA DELETE userinfo PIN={$pin}",
+                        ]);
+                    }
+                }
+
+                // ج) حذف مباشر بالسوكت للأجهزة المحلية المخصصة لهذا الموظف فقط
+                foreach ($targetDeviceKeys as $ipCandidate) {
+                    if (filter_var($ipCandidate, FILTER_VALIDATE_IP)) {
+                        $sock = @fsockopen($ipCandidate, 4370, $errno, $errstr, 0.5);
+                        if ($sock) {
+                            fclose($sock);
+                            try {
+                                $zk = new ZKTeco($ipCandidate);
+                                if (@$zk->connect()) {
+                                    @$zk->removeUser((int)$pin);
+                                    \Illuminate\Support\Facades\DB::table('zkt_device_deletions')->updateOrInsert(
+                                        ['device_key' => $ipCandidate, 'emp_num' => $pin],
+                                        ['deleted_at' => now(), 'updated_at' => now()]
+                                    );
+                                    @$zk->disconnect();
+                                }
+                            } catch (\Throwable $e) {}
                         }
                     }
                 }
             }
 
-            // 4. حذف الموظفين من أجهزة البصمة المتاحة على الشبكة المحلية مباشرة (مع مهلة سريعة)
-            $allIps = ipzkt::pluck('ip')->toArray();
-            foreach ($allIps as $ip) {
-                if (filter_var($ip, FILTER_VALIDATE_IP)) {
-                    $sock = @fsockopen($ip, 4370, $errno, $errstr, 0.5);
-                    if ($sock) {
-                        fclose($sock);
-                        try {
-                            $zk = new ZKTeco($ip);
-                            if (@$zk->connect()) {
-                                foreach ($nums as $num) {
-                                    @$zk->removeUser((int)$num);
-                                    \Illuminate\Support\Facades\DB::table('zkt_device_deletions')->updateOrInsert(
-                                        ['device_key' => $ip, 'emp_num' => (string)$num],
-                                        ['deleted_at' => now(), 'updated_at' => now()]
-                                    );
-                                }
-                                @$zk->disconnect();
-                            }
-                        } catch (\Throwable $e) {}
-                    }
-                }
-            }
+            // تنظيف جداول المزامنة للموظفين المحذوفين
+            \Illuminate\Support\Facades\DB::table('zkt_device_sync')->whereIn('emp_num', $stringNums)->delete();
+            \Illuminate\Support\Facades\DB::table('zkt_device_deletions')->whereIn('emp_num', $stringNums)->delete();
 
             // حذف سجلات البصمة
             zkt::whereIn('numid', $nums)->delete();

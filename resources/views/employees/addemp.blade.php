@@ -127,22 +127,32 @@
                 </h4>
 
                 <div class="bg-gray-50 dark:bg-[#111] p-4 rounded-xl border border-gray-200 dark:border-white/10 mb-6">
-                    <div class="mb-4 pb-4 border-b border-gray-200 dark:border-white/10">
+                    <div class="mb-4 pb-4 border-b border-gray-200 dark:border-white/10 flex items-center justify-between flex-wrap gap-2">
                         <label class="flex items-center gap-2 cursor-pointer w-max">
-                            <input type="checkbox" onchange="toggleAddEmpZkt(this)"
+                            <input type="checkbox" id="check-all-zkts" onchange="toggleAddEmpZkt(this)"
                                 class="custom-checkbox text-sky-500 focus:ring-sky-500">
                             <span class="text-sm font-bold text-gray-900 dark:text-white">تحديد الكل</span>
                         </label>
+                        <span class="text-xs text-gray-500 dark:text-gray-400">
+                            (اختر أجهزة البصمة المُراد إضافة الموظف إليها فقط)
+                        </span>
                     </div>
 
                     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
                         @foreach ($zkts as $zk)
+                            @php
+                                $zkValue = $zk->ip ?: ($zk->sn ?: $zk->name);
+                                $isChecked = (is_array(old('ipz')) && in_array($zkValue, old('ipz')))
+                                    || (!old() && count($zkts) === 1);
+                            @endphp
                             <div class="flex items-center gap-2">
                                 <label
-                                    class="flex items-center gap-2 cursor-pointer w-full p-2 hover:bg-white dark:hover:bg-white/5 rounded-lg transition-colors">
-                                    <input type="checkbox" name="ipz[]" value="{{ $zk->ip ?? $zk->sn }}"
+                                    class="flex items-center gap-2 cursor-pointer w-full p-2 hover:bg-white dark:hover:bg-white/5 rounded-lg transition-colors border border-transparent hover:border-gray-200 dark:hover:border-white/10">
+                                    <input type="checkbox" name="ipz[]" value="{{ $zkValue }}"
                                         class="custom-checkbox text-sky-500 focus:ring-sky-500 ipz-checkbox"
-                                        id="zk-{{ $zk->id }}" checked>
+                                        id="zk-{{ $zk->id }}"
+                                        onchange="updateCheckAllState()"
+                                        {{ $isChecked ? 'checked' : '' }}>
                                     <span class="text-xs font-bold text-gray-700 dark:text-gray-300">{{ $zk->name }}
                                         ({{ $zk->ip ?? $zk->sn }})</span>
                                     <span class="zkt-status-badge mr-auto" data-ip="{{ $zk->ip ?? $zk->sn }}">
@@ -403,7 +413,18 @@
             checkboxes.forEach(cb => cb.checked = source.checked);
         }
 
+        function updateCheckAllState() {
+            let checkboxes = document.querySelectorAll('.ipz-checkbox');
+            let checkAll = document.getElementById('check-all-zkts');
+            if (!checkAll || checkboxes.length === 0) return;
+            let allChecked = Array.from(checkboxes).every(cb => cb.checked);
+            let anyChecked = Array.from(checkboxes).some(cb => cb.checked);
+            checkAll.checked = allChecked;
+            checkAll.indeterminate = !allChecked && anyChecked;
+        }
+
         document.addEventListener("DOMContentLoaded", function () {
+            updateCheckAllState();
             let uniqueIps = [];
             let badges = document.querySelectorAll('.zkt-status-badge');
 

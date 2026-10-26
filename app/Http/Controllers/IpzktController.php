@@ -140,12 +140,13 @@ class IpzktController extends Controller
                 return 0;
             }
 
-            // مفاتيح الجهاز لمطابقتها في جدول zkt_device_sync
+            // مفاتيح الجهاز لمطابقتها في جدول zkt_device_sync وحقل ipz
             $deviceKeys = array_unique(array_filter([
                 $targetIp,
                 $device ? $device->name : null,
                 $device ? $device->ip : null,
                 $device ? $device->sn : null,
+                $device ? (string)$device->id : null,
             ]));
 
             // استبعاد الموظفين الذين تمت مزامنتهم بالفعل لهذا الجهاز
@@ -157,15 +158,37 @@ class IpzktController extends Controller
             $query = employees::query()
                 ->whereNotNull('num')
                 ->where('num', '!=', '')
-                ->where('num', '>', 0);
+                ->where('num', '>', 0)
+                ->whereNotNull('ipz')
+                ->where('ipz', '!=', '');
+
+            // تصفية في SQL: يجب أن يكون الموظف مخصصاً لهذا الجهاز فقط
+            $query->where(function ($subQ) use ($deviceKeys) {
+                foreach ($deviceKeys as $key) {
+                    $subQ->orWhere('ipz', $key)
+                         ->orWhere('ipz', 'LIKE', "%,{$key},%")
+                         ->orWhere('ipz', 'LIKE', "%, {$key},%")
+                         ->orWhere('ipz', 'LIKE', "{$key},%")
+                         ->orWhere('ipz', 'LIKE', "%,{$key}")
+                         ->orWhere('ipz', 'LIKE', "%, {$key}")
+                         ->orWhereRaw("FIND_IN_SET(?, REPLACE(ipz, ', ', ','))", [$key]);
+                }
+            });
 
             if (!empty($alreadySynced)) {
                 $query->whereNotIn('num', $alreadySynced);
             }
 
-            $pendingEmps = $query->get();
+            $pendingEmps = $query->get()->filter(function ($emp) use ($deviceKeys) {
+                if (empty($emp->ipz)) {
+                    return false;
+                }
+                $assigned = array_map('trim', explode(',', $emp->ipz));
+                return !empty(array_intersect($assigned, $deviceKeys));
+            });
+
             if ($pendingEmps->isEmpty()) {
-                return 0; // لا يوجد موظفين معلقين
+                return 0; // لا يوجد موظفين معلقين لهذا الجهاز
             }
 
             // فحص سريع للسوكيت أولاً (1.2 ثانية مهلة) للتأكد أن البصمة تعمل
@@ -1122,7 +1145,7 @@ private function _processAdmsAttlog(string $rawBody, ipzkt $device): void
             $device = ipzkt::where('name', $deviceName)->orWhere('ip', $deviceName)->first();
         }
 
-        // تحديد مفاتيح الجهاز للمطابقة الموثوقة في zkt_device_sync
+        // تحديد مفاتيح الجهاز للمطابقة الموثوقة في zkt_device_sync وحقل ipz
         $deviceKeys = array_unique(array_filter([
             $deviceKey,
             $deviceName,
@@ -1130,13 +1153,29 @@ private function _processAdmsAttlog(string $rawBody, ipzkt $device): void
             $device ? $device->name : null,
             $device ? $device->ip : null,
             $device ? $device->sn : null,
+            $device ? (string)$device->id : null,
         ]));
 
-        // جلب جميع الموظفين المسجلين في النظام
+        // جلب الموظفين المخصصين لهذا الجهاز فقط
         $query = employees::query()
             ->whereNotNull('num')
             ->where('num', '!=', '')
-            ->where('num', '>', 0);
+            ->where('num', '>', 0)
+            ->whereNotNull('ipz')
+            ->where('ipz', '!=', '');
+
+        // تصفية في SQL: يجب أن يحتوي حقل ipz على أحد مفاتيح هذا الجهاز
+        $query->where(function ($subQ) use ($deviceKeys) {
+            foreach ($deviceKeys as $key) {
+                $subQ->orWhere('ipz', $key)
+                     ->orWhere('ipz', 'LIKE', "%,{$key},%")
+                     ->orWhere('ipz', 'LIKE', "%, {$key},%")
+                     ->orWhere('ipz', 'LIKE', "{$key},%")
+                     ->orWhere('ipz', 'LIKE', "%,{$key}")
+                     ->orWhere('ipz', 'LIKE', "%, {$key}")
+                     ->orWhereRaw("FIND_IN_SET(?, REPLACE(ipz, ', ', ','))", [$key]);
+            }
+        });
 
         // إذا لم يُطلب Force، نرجع فقط الموظفين الذين لم يُزامنوا بعد لهذا الجهاز تحديداً
         if (!$force && !empty($deviceKeys)) {
@@ -1150,15 +1189,23 @@ private function _processAdmsAttlog(string $rawBody, ipzkt $device): void
             }
         }
 
-        $employeesList = $query->get(['id', 'num', 'name', 'password'])->map(function ($emp) {
-            return [
-                'uid'      => (int) $emp->num,   // UID = رقم الموظف (max 65535)
-                'userid'   => (string) $emp->num, // User ID في الماكينة
-                'name'     => mb_substr($emp->name ?? '', 0, 24), // max 24 حرف
-                'password' => $emp->password ?? '',
-                'role'     => 0, // 0 = User عادي, 14 = Admin
-            ];
-        });
+        $employeesList = $query->get(['id', 'num', 'name', 'password', 'role_zkt', 'ipz'])
+            ->filter(function ($emp) use ($deviceKeys) {
+                if (empty($emp->ipz)) {
+                    return false;
+                }
+                $assigned = array_map('trim', explode(',', $emp->ipz));
+                return !empty(array_intersect($assigned, $deviceKeys));
+            })
+            ->map(function ($emp) {
+                return [
+                    'uid'      => (int) $emp->num,   // UID = رقم الموظف (max 65535)
+                    'userid'   => (string) $emp->num, // User ID في الماكينة
+                    'name'     => mb_substr($emp->name ?? '', 0, 24), // max 24 حرف
+                    'password' => $emp->password ?? '',
+                    'role'     => (int) ($emp->role_zkt ?? 0), // 0 = User عادي, 14 = Admin
+                ];
+            })->values();
 
         return response()->json([
             'status'    => 'success',
@@ -1232,32 +1279,46 @@ private function _processAdmsAttlog(string $rawBody, ipzkt $device): void
         $deviceKey  = $deviceName ?: ($deviceIp ?: 'default');
         $isForce    = $request->boolean('force', false) || $request->boolean('force_delete', false);
 
+        $device = null;
+        if ($deviceIp) {
+            $device = ipzkt::where('ip', $deviceIp)->orWhere('name', $deviceIp)->first();
+        }
+        if (!$device && $deviceName) {
+            $device = ipzkt::where('name', $deviceName)->orWhere('ip', $deviceName)->first();
+        }
+
         $deviceKeys = array_unique(array_filter([
             $deviceKey,
             $deviceName,
             $deviceIp,
+            $device ? $device->name : null,
+            $device ? $device->ip : null,
+            $device ? $device->sn : null,
+            $device ? (string)$device->id : null,
         ]));
+
+        if (empty($deviceKeys)) {
+            return response()->json([
+                'status'        => 'success',
+                'count'         => 0,
+                'deleted_users' => [],
+            ]);
+        }
 
         $query = \App\Models\ZktDeletedUser::query();
 
-        // تصفية الأجهزة: إما أمر عام لكل الأجهزة (null) أو مخصص لهذا الجهاز
-        if (!empty($deviceKeys)) {
-            $query->where(function ($q) use ($deviceKeys) {
-                $q->whereNull('device_key')
-                  ->orWhere('device_key', '')
-                  ->orWhereIn('device_key', $deviceKeys);
-            });
+        // تصفية دقيقة: يرجع فقط الموظفين المطلوب حذفهم من هذا الجهاز تحديداً (وليس كل الأجهزة)
+        $query->whereIn('device_key', $deviceKeys);
 
-            // استبعاد الموظفين الذين تم حذفهم وتأكيدهم من هذا الجهاز مسبقاً (إلا في حالة Force)
-            if (!$isForce) {
-                $alreadyDeleted = DB::table('zkt_device_deletions')
-                    ->whereIn('device_key', $deviceKeys)
-                    ->pluck('emp_num')
-                    ->toArray();
+        // استبعاد الموظفين الذين تم حذفهم وتأكيدهم من هذا الجهاز مسبقاً (إلا في حالة Force)
+        if (!$isForce) {
+            $alreadyDeleted = DB::table('zkt_device_deletions')
+                ->whereIn('device_key', $deviceKeys)
+                ->pluck('emp_num')
+                ->toArray();
 
-                if (!empty($alreadyDeleted)) {
-                    $query->whereNotIn('num', $alreadyDeleted);
-                }
+            if (!empty($alreadyDeleted)) {
+                $query->whereNotIn('num', $alreadyDeleted);
             }
         }
 
@@ -1294,10 +1355,22 @@ private function _processAdmsAttlog(string $rawBody, ipzkt $device): void
         $deviceName  = $request->input('device_name');
         $deviceKey   = $deviceName ?: ($deviceIp ?: 'default');
 
+        $device = null;
+        if ($deviceIp) {
+            $device = ipzkt::where('ip', $deviceIp)->orWhere('name', $deviceIp)->first();
+        }
+        if (!$device && $deviceName) {
+            $device = ipzkt::where('name', $deviceName)->orWhere('ip', $deviceName)->first();
+        }
+
         $deviceKeys = array_unique(array_filter([
             $deviceKey,
             $deviceName,
             $deviceIp,
+            $device ? $device->name : null,
+            $device ? $device->ip : null,
+            $device ? $device->sn : null,
+            $device ? (string)$device->id : null,
         ]));
 
         if (empty($deletedPins) || !is_array($deletedPins)) {
@@ -1312,6 +1385,11 @@ private function _processAdmsAttlog(string $rawBody, ipzkt $device): void
                     ['deleted_at' => now(), 'updated_at' => now()]
                 );
             }
+
+            // حذف أمر الحذف المعلق لهذا الجهاز
+            \App\Models\ZktDeletedUser::where('num', (string)$pin)
+                ->whereIn('device_key', $deviceKeys)
+                ->delete();
         }
 
         Log::info("ZK Deleted User Sync: Device [$deviceKey] confirmed deletion of " . count($deletedPins) . " users. pins=" . implode(',', $deletedPins));
